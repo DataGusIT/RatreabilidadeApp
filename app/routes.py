@@ -1,28 +1,39 @@
 # app/routes.py
 
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for
 from app import app, db
 from app.models import Produtor, Propriedade, Lote
-# AINDA NÃO TEMOS O FORM, VAMOS PEGAR OS DADOS DIRETAMENTE DO REQUEST POR ENQUANTO
-# from app.forms import LoteForm 
 import qrcode
 import os
 from datetime import datetime
 
-# NOVA ROTA - A "PORTA DA FRENTE"
+# Rota principal que redireciona para a página de registro
 @app.route('/')
 def index():
-    # Redireciona o usuário da rota '/' para a rota '/registrar'
     return redirect(url_for('registrar_lote'))
 
-# NOVA ROTA PARA A PÁGINA DE SUCESSO
+# Rota para exibir a página de sucesso após o registro
 @app.route('/lote/<int:lote_id>/sucesso')
 def registro_sucesso(lote_id):
-    """Exibe a página de sucesso após o registro de um lote."""
+    """Exibe a página de sucesso com o QR Code pronto para impressão."""
     lote = Lote.query.get_or_404(lote_id)
-    return render_template('registro_sucesso.html', title='Sucesso!', lote=lote)
+    return render_template('registro_sucesso.html', title='Lote Registrado!', lote=lote)
 
-# Rota para exibir e registrar lotes
+# Rota para o consumidor ver as informações do lote
+@app.route('/lote/<int:lote_id>')
+def ver_lote(lote_id):
+    """Exibe a página pública com as informações de rastreabilidade do lote."""
+    lote = Lote.query.get_or_404(lote_id)
+    
+    # --- ALTERAÇÃO AQUI ---
+    # Passamos a data e hora atuais para o template
+    hora_atual = datetime.now()
+    return render_template('info_lote.html', 
+                           title=f'Informações do Lote #{lote_id}', 
+                           lote=lote, 
+                           hora_atual=hora_atual)
+
+# Rota para registrar um novo lote
 @app.route('/registrar', methods=['GET', 'POST'])
 def registrar_lote():
     if request.method == 'POST':
@@ -45,7 +56,6 @@ def registrar_lote():
         if not produtor:
             produtor = Produtor(nome=nome_produtor, documento=documento_produtor)
             db.session.add(produtor)
-            # Commit para que o produtor tenha um ID para a propriedade
             db.session.commit() 
         
         propriedade = Propriedade.query.filter_by(nome_propriedade=nome_propriedade, produtor_id=produtor.id).first()
@@ -57,7 +67,6 @@ def registrar_lote():
                 produtor_id=produtor.id
             )
             db.session.add(propriedade)
-            # Commit para que a propriedade tenha um ID para o lote
             db.session.commit()
 
         # Cria o novo lote
@@ -68,37 +77,25 @@ def registrar_lote():
             propriedade_id=propriedade.id
         )
         db.session.add(novo_lote)
-        db.session.commit() # Commit para que o lote tenha um ID
+        db.session.commit()
 
-        # Gerar o QR Code
+        # --- LINHA CRÍTICA ---
+        # Garante que a URL gerada aponte para a função 'ver_lote'
         qr_code_url = url_for('ver_lote', lote_id=novo_lote.id, _external=True)
+        # ---------------------
+        
         qr_img = qrcode.make(qr_code_url)
         qr_code_filename = f'lote_{novo_lote.id}.png'
         qr_code_path = os.path.join(app.root_path, 'static/qrcodes', qr_code_filename)
         
-        # --- LINHA NOVA ADICIONADA AQUI ---
-        # Garante que o diretório de destino existe antes de tentar salvar o arquivo
         os.makedirs(os.path.dirname(qr_code_path), exist_ok=True)
-        # ------------------------------------
-
         qr_img.save(qr_code_path)
 
         # Atualiza o lote com o caminho do QR Code
         novo_lote.qr_code_path = qr_code_filename
         db.session.commit()
 
-         # --- MODIFIQUE APENAS ESTA PARTE FINAL ---
-
-        # flash(f'Lote {novo_lote.id} registrado e QR Code gerado com sucesso!') # Podemos remover o flash
-        # return redirect(url_for('registrar_lote')) # << LINHA ANTIGA
-        
-        # vv LINHA NOVA vv
+        # Redireciona para a página de sucesso
         return redirect(url_for('registro_sucesso', lote_id=novo_lote.id))
         
-    return render_template('registro_lote.html', title='Registrar Lote')
-
-@app.route('/lote/<int:lote_id>')
-def ver_lote(lote_id):
-    # Usando o ORM para buscar o lote pelo ID
-    lote = Lote.query.get_or_404(lote_id)
-    return render_template('info_lote.html', lote=lote)
+    return render_template('registro_lote.html', title='Registrar Lote')    
