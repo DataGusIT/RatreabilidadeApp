@@ -1,0 +1,522 @@
+{% extends "base.html" %}
+
+{% block title %}Lote Registrado com Sucesso!{% endblock %}
+
+{% block content %}
+<!-- Header de Sucesso -->
+<div class="success-header text-center mb-5">
+    <div class="success-animation">
+        <div class="checkmark-circle">
+            <div class="checkmark"></div>
+        </div>
+    </div>
+    
+    <h1 class="success-title">Lote Registrado com Sucesso!</h1>
+    <p class="success-subtitle">
+        Lote <span class="lote-number">#{{ lote.id }}</span> foi criado e está pronto para rastreabilidade
+    </p>
+</div>
+
+<!-- Card Principal com QR Code -->
+<div class="card main-success-card shadow-lg border-0">
+    <div class="card-header text-center">
+        <div class="header-content">
+            <span class="header-icon">🎯</span>
+            <h3 class="header-title">QR Code Gerado</h3>
+            <p class="header-subtitle">Pronto para impressão e uso na embalagem</p>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        <div class="row align-items-center">
+            <!-- QR Code -->
+            <div class="col-lg-5">
+                <div class="qr-display-container">
+                    <div class="qr-wrapper">
+                        <img src="{{ url_for('static', filename='qrcodes/' + lote.qr_code_path) }}" 
+                             alt="QR Code do Lote {{ lote.id }}" 
+                             class="qr-image"
+                             id="qrImage">
+                    </div>
+                    
+                    <div class="qr-actions">
+                        <button class="btn btn-outline-primary btn-sm" onclick="downloadQR()">
+                            <span style="margin-right: 6px;">💾</span>
+                            Baixar QR Code
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="window.print()">
+                            <span style="margin-right: 6px;">🖨️</span>
+                            Imprimir
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Instruções -->
+            <div class="col-lg-7">
+                <div class="instructions-section">
+                    <h4 class="instructions-title">
+                        <span style="margin-right: 8px;">📋</span>
+                        Como usar o QR Code
+                    </h4>
+                    
+                    <div class="instruction-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h5>Baixe ou Imprima</h5>
+                                <p>Clique em "Baixar QR Code" para salvar a imagem ou use "Imprimir" para imprimir diretamente.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h5>Cole na Embalagem</h5>
+                                <p>Fixe o QR Code em local visível na embalagem do produto para fácil acesso dos consumidores.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h5>Rastreabilidade Ativa</h5>
+                                <p>Consumidores podem escanear e acessar todas as informações de origem do produto.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Informações do Lote -->
+<div class="lote-summary mt-4">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">
+                <span style="margin-right: 8px;">📦</span>
+                Resumo do Lote Criado
+            </h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="summary-item">
+                        <strong>ID do Lote:</strong>
+                        <span class="badge bg-success ms-2">#{{ lote.id }}</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="summary-item">
+                        <strong>Status:</strong>
+                        <span class="badge bg-primary ms-2">Ativo para Rastreamento</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ações Principais -->
+<div class="action-buttons text-center mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="button-group">
+                <a href="{{ url_for('registrar_lote') }}" class="btn btn-success btn-lg action-btn">
+                    <span class="btn-icon">➕</span>
+                    <span class="btn-text">Registrar Novo Lote</span>
+                </a>
+                
+                <a href="{{ url_for('ver_lote', lote_id=lote.id) }}" target="_blank" class="btn btn-outline-primary btn-lg action-btn">
+                    <span class="btn-icon">👁️</span>
+                    <span class="btn-text">Visualizar Página Pública</span>
+                </a>
+                
+                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-lg action-btn">
+                    <span class="btn-icon">🏠</span>
+                    <span class="btn-text">Voltar ao Início</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Header de Sucesso */
+    .success-header {
+        padding: 2rem 0;
+    }
+
+    .success-animation {
+        margin-bottom: 2rem;
+    }
+
+    .checkmark-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #30D158 100%);
+        margin: 0 auto;
+        position: relative;
+        box-shadow: var(--shadow-lg);
+        animation: checkmarkScale 0.6s ease-out;
+    }
+
+    .checkmark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 25px;
+        height: 15px;
+        border: solid white;
+        border-width: 0 0 4px 4px;
+        transform: translate(-50%, -60%) rotate(-45deg);
+        animation: checkmarkDraw 0.4s ease-out 0.2s backwards;
+    }
+
+    @keyframes checkmarkScale {
+        0% { transform: scale(0); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    @keyframes checkmarkDraw {
+        0% { width: 0; height: 0; }
+        100% { width: 25px; height: 15px; }
+    }
+
+    .success-title {
+        font-weight: 700;
+        color: var(--text-primary);
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .success-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.25rem;
+        margin: 0;
+    }
+
+    .lote-number {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #30D158 100%);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    /* Card Principal */
+    .main-success-card {
+        border-radius: var(--border-radius-lg);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, var(--surface) 0%, var(--surface-secondary) 100%);
+        border-bottom: 1px solid var(--neutral-200);
+        padding: 2.5rem;
+    }
+
+    .header-content {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .header-icon {
+        font-size: 3rem;
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    .header-title {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .header-subtitle {
+        color: var(--text-secondary);
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
+    /* QR Code Display */
+    .qr-display-container {
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .qr-wrapper {
+        background: var(--surface);
+        border: 3px solid var(--neutral-200);
+        border-radius: var(--border-radius-lg);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        display: inline-block;
+        transition: var(--transition);
+    }
+
+    .qr-wrapper:hover {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        transform: scale(1.05);
+    }
+
+    .qr-image {
+        max-width: 250px;
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .qr-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    /* Instruções */
+    .instructions-section {
+        padding: 2rem;
+    }
+
+    .instructions-title {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+    }
+
+    .instruction-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .step {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+
+    .step-number {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color) 0%, #0051D5 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        flex-shrink: 0;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .step-content h5 {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .step-content p {
+        color: var(--text-secondary);
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    /* Resumo do Lote */
+    .lote-summary .card {
+        background: linear-gradient(135deg, rgba(52, 199, 89, 0.05) 0%, rgba(48, 209, 88, 0.05) 100%);
+        border-left: 4px solid var(--secondary-color);
+    }
+
+    .summary-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .summary-item strong {
+        color: var(--text-primary);
+        margin-right: 0.5rem;
+    }
+
+    /* Botões de Ação */
+    .action-buttons {
+        margin-bottom: 3rem;
+    }
+
+    .button-group {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 1.25rem 2rem;
+        font-weight: 500;
+        transition: var(--transition);
+        border-radius: var(--border-radius);
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .btn-icon {
+        font-size: 1.25rem;
+    }
+
+    .btn-text {
+        font-size: 1.1rem;
+    }
+
+    /* Responsividade */
+    @media (min-width: 768px) {
+        .button-group {
+            flex-direction: row;
+            justify-content: center;
+        }
+        
+        .action-btn {
+            flex: 0 1 auto;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .instructions-section {
+            padding: 2rem 1rem;
+        }
+        
+        .qr-display-container {
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .success-title {
+            font-size: 2rem;
+        }
+        
+        .success-subtitle {
+            font-size: 1.1rem;
+        }
+        
+        .checkmark-circle {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .checkmark {
+            width: 18px;
+            height: 12px;
+        }
+        
+        .qr-image {
+            max-width: 200px;
+        }
+        
+        .step {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+        }
+        
+        .step-number {
+            margin: 0 auto;
+        }
+        
+        .instructions-title {
+            font-size: 1.25rem;
+            text-align: center;
+        }
+        
+        .qr-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .qr-actions .btn {
+            width: 200px;
+        }
+    }
+
+    /* Print Styles */
+    @media print {
+        .action-buttons,
+        .instructions-section {
+            display: none !important;
+        }
+        
+        .card-header {
+            background: white !important;
+        }
+        
+        .qr-wrapper {
+            border: 2px solid #000 !important;
+            box-shadow: none !important;
+        }
+    }
+
+    /* Animações de Entrada */
+    .main-success-card {
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    .lote-summary {
+        animation: fadeInUp 0.6s ease-out 0.2s backwards;
+    }
+
+    .action-buttons {
+        animation: fadeInUp 0.6s ease-out 0.4s backwards;
+    }
+</style>
+
+<script>
+    // Função para baixar o QR Code
+    function downloadQR() {
+        const qrImage = document.getElementById('qrImage');
+        const link = document.createElement('a');
+        link.href = qrImage.src;
+        link.download = `qr_code_lote_{{ lote.id }}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+    
+    // Animação de entrada escalonada
+    document.addEventListener('DOMContentLoaded', function() {
+        const steps = document.querySelectorAll('.step');
+        steps.forEach((step, index) => {
+            step.style.animation = `fadeInLeft 0.6s ease-out ${0.1 * index}s backwards`;
+        });
+    });
+    
+    // Efeito hover no QR Code
+    const qrWrapper = document.querySelector('.qr-wrapper');
+    if (qrWrapper) {
+        qrWrapper.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05) rotate(2deg)';
+        });
+        
+        qrWrapper.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1) rotate(0deg)';
+        });
+    }
+</script>
+
+{% endblock %}

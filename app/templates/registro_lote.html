@@ -1,0 +1,367 @@
+{% extends "base.html" %}
+
+{% block title %}Registrar Novo Lote{% endblock %}
+
+{% block content %}
+<div class="card shadow-lg border-0">
+    <div class="card-header text-center">
+        <div class="header-icon mb-2">
+            <span style="font-size: 2.5rem;">📋</span>
+        </div>
+        <h2>Registrar Novo Lote de Produto</h2>
+        <p class="mb-0 opacity-90" style="font-size: 1.1rem;">Preencha as informações para gerar o QR Code de rastreabilidade</p>
+    </div>
+    <div class="card-body">
+        
+        <!-- Bloco para exibir mensagens de sucesso -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-success d-flex align-items-center" role="alert">
+                        <span style="font-size: 1.25rem; margin-right: 12px;">✅</span>
+                        <div>{{ message }}</div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="" class="needs-validation" novalidate>
+            <!-- Seção Produtor -->
+            <div class="form-section">
+                <div class="section-header">
+                    <span class="section-icon">👨‍🌾</span>
+                    <h5 class="section-title">Informações do Produtor</h5>
+                </div>
+                <hr class="section-divider">
+                
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label for="nome_produtor" class="form-label">Nome do Produtor</label>
+                        <input type="text" id="nome_produtor" name="nome_produtor" class="form-control" 
+                               placeholder="Digite o nome completo" required>
+                        <div class="invalid-feedback">
+                            Por favor, informe o nome do produtor.
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label for="documento_produtor" class="form-label">CPF/CNPJ</label>
+                        <input type="text" id="documento_produtor" name="documento_produtor" class="form-control" 
+                               placeholder="000.000.000-00 ou 00.000.000/0000-00" required>
+                        <div class="invalid-feedback">
+                            Por favor, informe um CPF ou CNPJ válido.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção Propriedade -->
+            <div class="form-section">
+                <div class="section-header">
+                    <span class="section-icon">🏡</span>
+                    <h5 class="section-title">Informações da Propriedade</h5>
+                </div>
+                <hr class="section-divider">
+                
+                <div class="mb-4">
+                    <label for="nome_propriedade" class="form-label">Nome da Propriedade</label>
+                    <input type="text" id="nome_propriedade" name="nome_propriedade" class="form-control" 
+                           placeholder="Sítio, Fazenda, Chácara..." required>
+                    <div class="invalid-feedback">
+                        Por favor, informe o nome da propriedade.
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-8 mb-4">
+                        <label for="endereco" class="form-label">Endereço Completo</label>
+                        <input type="text" id="endereco" name="endereco" class="form-control" 
+                               placeholder="Rua, número, bairro..." required>
+                        <div class="invalid-feedback">
+                            Por favor, informe o endereço da propriedade.
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="cidade" class="form-label">Cidade</label>
+                        <input type="text" id="cidade" name="cidade" class="form-control" 
+                               placeholder="Nome da cidade" required>
+                        <div class="invalid-feedback">
+                            Por favor, informe a cidade.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Seção Lote -->
+            <div class="form-section">
+                <div class="section-header">
+                    <span class="section-icon">📦</span>
+                    <h5 class="section-title">Informações do Lote</h5>
+                </div>
+                <hr class="section-divider">
+                
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label for="data_colheita" class="form-label">Data da Colheita</label>
+                        <input type="date" id="data_colheita" name="data_colheita" class="form-control" required>
+                        <div class="invalid-feedback">
+                            Por favor, informe a data da colheita.
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label for="validade" class="form-label">Data de Validade</label>
+                        <input type="date" id="validade" name="validade" class="form-control" required>
+                        <div class="invalid-feedback">
+                            Por favor, informe a data de validade.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="boas_praticas" class="form-label">Boas Práticas Utilizadas</label>
+                    <textarea id="boas_praticas" name="boas_praticas" rows="5" class="form-control" 
+                              placeholder="Descreva as práticas sustentáveis e métodos utilizados na produção..."></textarea>
+                    <div class="form-text">Opcional: Descreva os métodos sustentáveis utilizados no cultivo.</div>
+                </div>
+            </div>
+
+            <!-- Botão Submit -->
+            <div class="submit-section">
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success btn-lg submit-btn">
+                        <span class="btn-icon">🎯</span>
+                        <span class="btn-text">Gerar QR Code e Salvar Lote</span>
+                        <span class="btn-loader d-none">
+                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                            Processando...
+                        </span>
+                    </button>
+                </div>
+                <p class="text-center text-muted mt-3 mb-0">
+                    <small>Um QR Code será gerado automaticamente após o registro</small>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .form-section {
+        margin-bottom: 3rem;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .section-icon {
+        font-size: 1.75rem;
+        margin-right: 0.75rem;
+    }
+
+    .section-title {
+        margin: 0;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .form-control {
+        font-size: 1rem;
+        padding: 1rem;
+        border: 2px solid var(--neutral-300);
+        transition: var(--transition);
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+    }
+
+    .form-control.is-invalid {
+        border-color: var(--tertiary-color);
+        box-shadow: 0 0 0 4px rgba(255, 59, 48, 0.1);
+    }
+
+    .form-control.is-valid {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 4px rgba(52, 199, 89, 0.1);
+    }
+
+    .invalid-feedback {
+        display: block;
+        font-size: 0.875rem;
+        color: var(--tertiary-color);
+        margin-top: 0.5rem;
+    }
+
+    .form-text {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-top: 0.5rem;
+    }
+
+    .submit-section {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--neutral-200);
+    }
+
+    .submit-btn {
+        position: relative;
+        padding: 1.25rem 2rem;
+        font-size: 1.125rem;
+        font-weight: 600;
+        overflow: hidden;
+    }
+
+    .btn-icon {
+        margin-right: 0.75rem;
+        font-size: 1.25rem;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(52, 199, 89, 0.3);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    .header-icon {
+        margin-bottom: 0.5rem;
+    }
+
+    /* Animações */
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-section {
+        animation: slideInUp 0.6s ease-out backwards;
+    }
+
+    .form-section:nth-child(2) { animation-delay: 0.1s; }
+    .form-section:nth-child(3) { animation-delay: 0.2s; }
+    .form-section:nth-child(4) { animation-delay: 0.3s; }
+    .submit-section { animation-delay: 0.4s; }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .section-icon {
+            margin-bottom: 0.5rem;
+            margin-right: 0;
+        }
+        
+        .form-control {
+            padding: 0.875rem;
+        }
+        
+        .submit-btn {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<script>
+    // Validação do formulário
+    (function() {
+        'use strict';
+        
+        const form = document.querySelector('.needs-validation');
+        const submitBtn = document.querySelector('.submit-btn');
+        const btnText = document.querySelector('.btn-text');
+        const btnLoader = document.querySelector('.btn-loader');
+        
+        // Máscaras para CPF/CNPJ
+        const documentoInput = document.getElementById('documento_produtor');
+        
+        documentoInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length <= 11) {
+                // CPF
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            } else {
+                // CNPJ
+                value = value.replace(/^(\d{2})(\d)/, '$1.$2');
+                value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+                value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
+                value = value.replace(/(\d{4})(\d)/, '$1-$2');
+            }
+            
+            e.target.value = value;
+        });
+        
+        // Validação ao submeter
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                // Mostrar loading
+                btnText.style.display = 'none';
+                btnLoader.classList.remove('d-none');
+                submitBtn.disabled = true;
+            }
+            
+            form.classList.add('was-validated');
+        });
+        
+        // Validação em tempo real
+        const inputs = form.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.checkValidity()) {
+                    this.classList.add('is-valid');
+                    this.classList.remove('is-invalid');
+                } else {
+                    this.classList.add('is-invalid');
+                    this.classList.remove('is-valid');
+                }
+            });
+            
+            input.addEventListener('input', function() {
+                if (this.classList.contains('was-validated')) {
+                    if (this.checkValidity()) {
+                        this.classList.add('is-valid');
+                        this.classList.remove('is-invalid');
+                    } else {
+                        this.classList.add('is-invalid');
+                        this.classList.remove('is-valid');
+                    }
+                }
+            });
+        });
+        
+        // Auto-preenchimento de data
+        const today = new Date();
+        const dataColheitaInput = document.getElementById('data_colheita');
+        const validadeInput = document.getElementById('validade');
+        
+        dataColheitaInput.addEventListener('change', function() {
+            if (this.value && !validadeInput.value) {
+                const colheitaDate = new Date(this.value);
+                colheitaDate.setDate(colheitaDate.getDate() + 30); // 30 dias após colheita
+                validadeInput.value = colheitaDate.toISOString().split('T')[0];
+            }
+        });
+    })();
+</script>
+
+{% endblock %}

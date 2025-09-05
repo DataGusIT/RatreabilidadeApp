@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}Início{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center mb-5">
+    <div class="hero-content">
+        <div class="hero-icon mb-4">
+            <span style="font-size: 4rem;">🌱</span>
+        </div>
+        <h1 class="hero-title display-4 fw-bold mb-4">
+            Bem-vindo ao Sistema de 
+            <span style="background: linear-gradient(135deg, #34C759 0%, #30D158 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Rastreabilidade Rural
+            </span>
+        </h1>
+        <p class="hero-subtitle lead text-muted mb-5" style="max-width: 600px; margin: 0 auto;">
+            Garanta a origem e qualidade dos seus produtos com nosso sistema completo de rastreabilidade. 
+            Transparência do campo à mesa.
+        </p>
+        
+        <div class="hero-actions">
+            <a href="{{ url_for('registrar_lote') }}" class="btn btn-success btn-lg me-3">
+                <span style="margin-right: 8px;">📋</span>
+                Registrar Novo Lote
+            </a>
+            <button class="btn btn-outline-secondary btn-lg" onclick="scrollToFeatures()">
+                <span style="margin-right: 8px;">📱</span>
+                Escanear QR Code
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="features-section" id="features">
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="feature-card h-100">
+                <div class="feature-icon">
+                    <span style="font-size: 3rem;">🔍</span>
+                </div>
+                <div class="feature-content">
+                    <h4 class="feature-title">Rastreabilidade Completa</h4>
+                    <p class="feature-description">
+                        Acompanhe cada produto desde a origem até o consumidor final com informações detalhadas sobre produtor, propriedade e práticas utilizadas.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="feature-card h-100">
+                <div class="feature-icon">
+                    <span style="font-size: 3rem;">⚡</span>
+                </div>
+                <div class="feature-content">
+                    <h4 class="feature-title">QR Code Instantâneo</h4>
+                    <p class="feature-description">
+                        Gere códigos QR automaticamente para cada lote, permitindo acesso rápido às informações de rastreabilidade via smartphone.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="feature-card h-100">
+                <div class="feature-icon">
+                    <span style="font-size: 3rem;">✅</span>
+                </div>
+                <div class="feature-content">
+                    <h4 class="feature-title">Segurança Alimentar</h4>
+                    <p class="feature-description">
+                        Documente boas práticas agrícolas e garanta a qualidade dos alimentos, construindo confiança com seus consumidores.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cta-section mt-5">
+    <div class="cta-card">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="cta-title">Pronto para começar?</h3>
+                <p class="cta-description mb-0">
+                    Registre seu primeiro lote agora e experimente a transparência total na cadeia produtiva.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end text-center mt-3 mt-lg-0">
+                <a href="{{ url_for('registrar_lote') }}" class="btn btn-success btn-lg">
+                    Começar Agora
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hero-section {
+        padding: 4rem 0;
+        background: linear-gradient(135deg, rgba(52, 199, 89, 0.05) 0%, rgba(48, 209, 88, 0.05) 100%);
+        border-radius: 20px;
+        margin-bottom: 4rem;
+    }
+
+    .hero-title {
+        color: var(--text-primary);
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: 1.25rem;
+        line-height: 1.6;
+    }
+
+    .hero-actions .btn {
+        transition: var(--transition);
+    }
+
+    .hero-actions .btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .features-section {
+        margin: 4rem 0;
+    }
+
+    .feature-card {
+        background: var(--surface);
+        border: 1px solid var(--neutral-200);
+        border-radius: var(--border-radius-lg);
+        padding: 2.5rem;
+        text-align: center;
+        transition: var(--transition);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-color);
+    }
+
+    .feature-icon {
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-title {
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+    }
+
+    .feature-description {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .cta-section {
+        margin: 4rem 0 2rem 0;
+    }
+
+    .cta-card {
+        background: linear-gradient(135deg, var(--surface) 0%, var(--surface-secondary) 100%);
+        border: 1px solid var(--neutral-200);
+        border-radius: var(--border-radius-lg);
+        padding: 3rem;
+        box-shadow: var(--shadow-md);
+    }
+
+    .cta-title {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .cta-description {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 3rem 1rem;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .hero-actions .btn {
+            display: block;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card {
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta-card {
+            padding: 2rem;
+        }
+    }
+</style>
+
+<script>
+    function scrollToFeatures() {
+        document.getElementById('features').scrollIntoView({
+            behavior: 'smooth'
+        });
+    }
+</script>
+{% endblock %}
