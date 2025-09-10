@@ -131,3 +131,4 @@ def ver_lote(lote_id):
                            title=f'Informações do Lote #{lote_id}', 
                            lote=lote, 
                            hora_atual=hora_atual)
+
