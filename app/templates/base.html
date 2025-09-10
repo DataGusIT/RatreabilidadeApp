@@ -288,11 +288,26 @@
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ url_for('index') }}">🌱 Rastreabilidade Rural</a>
+            <div class="d-flex">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('profile') }}" class="btn btn-outline-primary me-2">Meu Perfil</a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Sair</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-success me-2">Entrar</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-success">Registrar</a>
+                {% endif %}
+            </div>
         </div>
     </nav>
 
-    <!-- Conteúdo principal da página -->
     <main class="container" style="margin-top: 120px;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
     </main>
 
