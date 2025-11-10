@@ -4,366 +4,371 @@
 
 {% block content %}
 <div class="card shadow-lg border-0">
-    <div class="card-header text-center">
-        <div class="header-icon mb-2">
-            <span style="font-size: 2.5rem;">📋</span>
+    <div class="card-header text-center bg-transparent border-0 pt-4">
+        <div class="header-icon text-success mb-3">
+            <i class="fa-solid fa-clipboard-list fa-2x"></i>
         </div>
-        <h2>Registrar Novo Lote de Produto</h2>
-        <p class="mb-0 opacity-90" style="font-size: 1.1rem;">Preencha as informações para gerar o QR Code de rastreabilidade</p>
+        <h2 class="fw-bold">Registrar Novo Lote de Produto</h2>
+        <p class="mb-0 text-muted">Preencha as informações para gerar o QR Code de rastreabilidade.</p>
     </div>
-    <div class="card-body">
+    <div class="card-body p-4 p-md-5">
         
-        <!-- Bloco para exibir mensagens de sucesso -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-success d-flex align-items-center" role="alert">
-                        <span style="font-size: 1.25rem; margin-right: 12px;">✅</span>
-                        <div>{{ message }}</div>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
         <form method="POST" action="" class="needs-validation" novalidate>
-            <!-- Seção Produtor -->
+            <!-- ================== Seção Produtor ================== -->
             <div class="form-section">
                 <div class="section-header">
-                    <span class="section-icon">👨‍🌾</span>
+                    <span class="section-icon text-success"><i class="fa-solid fa-user-tie"></i></span>
                     <h5 class="section-title">Informações do Produtor</h5>
                 </div>
-                <hr class="section-divider">
+                <hr class="section-divider mb-4">
                 
                 <div class="row">
                     <div class="col-md-6 mb-4">
-                        <label for="nome_produtor" class="form-label">Nome do Produtor</label>
-                        <input type="text" id="nome_produtor" name="nome_produtor" class="form-control" 
-                            placeholder="Digite o nome completo" required
-                            value="{{ produtor.nome if produtor else '' }}">
-                        <div class="invalid-feedback">
-                            Por favor, informe o nome do produtor.
+                        <label for="documento_produtor" class="form-label">CPF/CNPJ</label>
+                        <div class="input-group">
+                            <input type="text" id="documento_produtor" name="documento_produtor" class="form-control" 
+                                placeholder="Digite o CNPJ para buscar" required maxlength="18"
+                                value="{{ produtor.documento if produtor else '' }}">
+                            <span class="input-group-text d-none" id="cnpj-loader">
+                                <span class="spinner-border spinner-border-sm"></span>
+                            </span>
                         </div>
+                        <div class="invalid-feedback" id="documento-feedback">Por favor, informe um CPF ou CNPJ válido.</div>
+                        <div class="api-feedback text-danger small mt-1" id="cnpj-api-feedback"></div>
                     </div>
                     <div class="col-md-6 mb-4">
-                        <label for="documento_produtor" class="form-label">CPF/CNPJ</label>
-                        <input type="text" id="documento_produtor" name="documento_produtor" class="form-control" 
-                            placeholder="000.000.000-00 ou 00.000.000/0000-00" required
-                            value="{{ produtor.documento if produtor else '' }}">
-                        <div class="invalid-feedback">
-                            Por favor, informe um CPF ou CNPJ válido.
-                        </div>
+                        <label for="nome_produtor" class="form-label">Nome do Produtor / Razão Social</label>
+                        <input type="text" id="nome_produtor" name="nome_produtor" class="form-control" 
+                            placeholder="Preenchido automaticamente pelo CNPJ" required minlength="3"
+                            value="{{ produtor.nome if produtor else '' }}">
+                        <div class="invalid-feedback">O nome deve ter no mínimo 3 caracteres.</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Seção Propriedade -->
+            <!-- ================== Seção Propriedade ================== -->
             <div class="form-section">
                 <div class="section-header">
-                    <span class="section-icon">🏡</span>
+                    <span class="section-icon text-success"><i class="fa-solid fa-house-chimney"></i></span>
                     <h5 class="section-title">Informações da Propriedade</h5>
                 </div>
-                <hr class="section-divider">
-                
-                <div class="mb-4">
-                    <label for="nome_propriedade" class="form-label">Nome da Propriedade</label>
-                    <input type="text" id="nome_propriedade" name="nome_propriedade" class="form-control" 
-                           placeholder="Sítio, Fazenda, Chácara..." required>
-                    <div class="invalid-feedback">
-                        Por favor, informe o nome da propriedade.
+                <hr class="section-divider mb-4">
+
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <label for="cep" class="form-label">CEP</label>
+                        <div class="input-group">
+                            <input type="text" id="cep" name="cep" class="form-control" placeholder="Digite o CEP para buscar" maxlength="9">
+                            <span class="input-group-text d-none" id="cep-loader">
+                                <span class="spinner-border spinner-border-sm"></span>
+                            </span>
+                        </div>
+                        <div class="api-feedback text-danger small mt-1" id="cep-api-feedback"></div>
+                    </div>
+                    <div class="col-md-8 mb-4">
+                         <label for="nome_propriedade" class="form-label">Nome da Propriedade</label>
+                        <input type="text" id="nome_propriedade" name="nome_propriedade" class="form-control" 
+                               placeholder="Ex: Sítio Sol Nascente" required minlength="3">
+                        <div class="invalid-feedback">Informe um nome válido para a propriedade.</div>
                     </div>
                 </div>
                 
                 <div class="row">
-                    <div class="col-md-8 mb-4">
-                        <label for="endereco" class="form-label">Endereço Completo</label>
+                    <div class="col-md-6 mb-4">
+                        <label for="endereco" class="form-label">Endereço</label>
                         <input type="text" id="endereco" name="endereco" class="form-control" 
-                               placeholder="Rua, número, bairro..." required>
-                        <div class="invalid-feedback">
-                            Por favor, informe o endereço da propriedade.
-                        </div>
+                               placeholder="Preenchido automaticamente pelo CEP" required minlength="5">
+                        <div class="invalid-feedback">Informe um endereço com no mínimo 5 caracteres.</div>
                     </div>
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-6 mb-4">
                         <label for="cidade" class="form-label">Cidade</label>
                         <input type="text" id="cidade" name="cidade" class="form-control" 
-                               placeholder="Nome da cidade" required>
-                        <div class="invalid-feedback">
-                            Por favor, informe a cidade.
-                        </div>
+                               placeholder="Preenchido automaticamente pelo CEP" required minlength="3">
+                        <div class="invalid-feedback">Informe um nome de cidade válido.</div>
                     </div>
                 </div>
             </div>
             
-            <!-- Seção Lote -->
+            <!-- ================== Seção Lote ================== -->
             <div class="form-section">
                 <div class="section-header">
-                    <span class="section-icon">📦</span>
+                    <span class="section-icon text-success"><i class="fa-solid fa-box-archive"></i></span>
                     <h5 class="section-title">Informações do Lote</h5>
                 </div>
-                <hr class="section-divider">
+                <hr class="section-divider mb-4">
                 
                 <div class="row">
                     <div class="col-md-6 mb-4">
                         <label for="data_colheita" class="form-label">Data da Colheita</label>
                         <input type="date" id="data_colheita" name="data_colheita" class="form-control" required>
-                        <div class="invalid-feedback">
-                            Por favor, informe a data da colheita.
-                        </div>
+                        <div class="invalid-feedback" id="colheita-feedback">Informe a data da colheita. Não pode ser uma data futura.</div>
                     </div>
                     <div class="col-md-6 mb-4">
                         <label for="validade" class="form-label">Data de Validade</label>
                         <input type="date" id="validade" name="validade" class="form-control" required>
-                        <div class="invalid-feedback">
-                            Por favor, informe a data de validade.
-                        </div>
+                        <div class="invalid-feedback" id="validade-feedback">A data de validade deve ser posterior à data da colheita.</div>
                     </div>
                 </div>
                 
                 <div class="mb-4">
-                    <label for="boas_praticas" class="form-label">Boas Práticas Utilizadas</label>
+                    <label for="boas_praticas" class="form-label">Boas Práticas Utilizadas (Opcional)</label>
                     <textarea id="boas_praticas" name="boas_praticas" rows="5" class="form-control" 
-                              placeholder="Descreva as práticas sustentáveis e métodos utilizados na produção..."></textarea>
-                    <div class="form-text">Opcional: Descreva os métodos sustentáveis utilizados no cultivo.</div>
+                              placeholder="Descreva as práticas sustentáveis, métodos de cultivo, certificações, etc..."></textarea>
                 </div>
             </div>
 
-            <!-- Botão Submit -->
-            <div class="submit-section">
+            <!-- ================== Botão Submit ================== -->
+            <div class="submit-section mt-5">
                 <div class="d-grid">
                     <button type="submit" class="btn btn-success btn-lg submit-btn">
-                        <span class="btn-icon">🎯</span>
-                        <span class="btn-text">Gerar QR Code e Salvar Lote</span>
+                        <span class="btn-text">
+                            <i class="fa-solid fa-qrcode me-2"></i>
+                            Gerar QR Code e Salvar Lote
+                        </span>
                         <span class="btn-loader d-none">
                             <span class="spinner-border spinner-border-sm me-2" role="status"></span>
                             Processando...
                         </span>
                     </button>
                 </div>
-                <p class="text-center text-muted mt-3 mb-0">
-                    <small>Um QR Code será gerado automaticamente após o registro</small>
-                </p>
             </div>
         </form>
     </div>
 </div>
 
 <style>
-    .form-section {
-        margin-bottom: 3rem;
-    }
-
-    .section-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-    .section-icon {
-        font-size: 1.75rem;
-        margin-right: 0.75rem;
-    }
-
-    .section-title {
-        margin: 0;
-        font-weight: 600;
-        color: var(--text-primary);
-    }
-
+    /* Estilos originais mantidos e aprimorados */
+    .form-section { margin-bottom: 2.5rem; }
+    .section-header { display: flex; align-items: center; gap: 0.75rem; }
+    .section-icon { font-size: 1.5rem; }
+    .section-title { margin: 0; font-weight: 600; }
     .form-control {
         font-size: 1rem;
-        padding: 1rem;
-        border: 2px solid var(--neutral-300);
-        transition: var(--transition);
+        padding: 0.875rem 1rem;
+        border: 1px solid #ced4da;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     }
-
     .form-control:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, .25);
     }
-
-    .form-control.is-invalid {
-        border-color: var(--tertiary-color);
-        box-shadow: 0 0 0 4px rgba(255, 59, 48, 0.1);
-    }
-
-    .form-control.is-valid {
-        border-color: var(--secondary-color);
-        box-shadow: 0 0 0 4px rgba(52, 199, 89, 0.1);
-    }
-
-    .invalid-feedback {
-        display: block;
-        font-size: 0.875rem;
-        color: var(--tertiary-color);
-        margin-top: 0.5rem;
-    }
-
-    .form-text {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-        margin-top: 0.5rem;
-    }
-
-    .submit-section {
-        margin-top: 3rem;
-        padding-top: 2rem;
-        border-top: 1px solid var(--neutral-200);
-    }
-
+    .was-validated .form-control:valid, .form-control.is-valid { border-color: #198754; }
+    .was-validated .form-control:valid:focus, .form-control.is-valid:focus { box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, .25); }
+    .was-validated .form-control:invalid, .form-control.is-invalid { border-color: #dc3545; }
+    .was-validated .form-control:invalid:focus, .form-control.is-invalid:focus { box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, .25); }
+    .invalid-feedback { font-weight: 500; }
+    .submit-section { padding-top: 1.5rem; border-top: 1px solid #dee2e6; }
     .submit-btn {
-        position: relative;
-        padding: 1.25rem 2rem;
+        padding: 0.875rem;
         font-size: 1.125rem;
         font-weight: 600;
-        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-
-    .btn-icon {
-        margin-right: 0.75rem;
-        font-size: 1.25rem;
-    }
-
     .submit-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(52, 199, 89, 0.3);
-    }
-
-    .submit-btn:active {
-        transform: translateY(0);
-    }
-
-    .header-icon {
-        margin-bottom: 0.5rem;
-    }
-
-    /* Animações */
-    @keyframes slideInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .form-section {
-        animation: slideInUp 0.6s ease-out backwards;
-    }
-
-    .form-section:nth-child(2) { animation-delay: 0.1s; }
-    .form-section:nth-child(3) { animation-delay: 0.2s; }
-    .form-section:nth-child(4) { animation-delay: 0.3s; }
-    .submit-section { animation-delay: 0.4s; }
-
-    /* Responsividade */
-    @media (max-width: 768px) {
-        .section-header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .section-icon {
-            margin-bottom: 0.5rem;
-            margin-right: 0;
-        }
-        
-        .form-control {
-            padding: 0.875rem;
-        }
-        
-        .submit-btn {
-            font-size: 1rem;
-        }
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
     }
 </style>
 
 <script>
-    // Validação do formulário
-    (function() {
-        'use strict';
+(function() {
+    'use strict';
+    
+    // --- Seletores de Elementos ---
+    const form = document.querySelector('.needs-validation');
+    const submitBtn = document.querySelector('.submit-btn');
+    const btnText = document.querySelector('.btn-text');
+    const btnLoader = document.querySelector('.btn-loader');
+    
+    const documentoInput = document.getElementById('documento_produtor');
+    const nomeProdutorInput = document.getElementById('nome_produtor');
+    const cnpjLoader = document.getElementById('cnpj-loader');
+    const cnpjApiFeedback = document.getElementById('cnpj-api-feedback');
+
+    const cepInput = document.getElementById('cep');
+    const enderecoInput = document.getElementById('endereco');
+    const cidadeInput = document.getElementById('cidade');
+    const cepLoader = document.getElementById('cep-loader');
+    const cepApiFeedback = document.getElementById('cep-api-feedback');
+    
+    // --- FUNÇÕES DE VALIDAÇÃO DE DOCUMENTO (mantidas) ---
+    function validateCPF(cpf) {
+        cpf = cpf.replace(/\D/g, '');
+        if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+        let sum = 0, rest;
+        for (let i = 1; i <= 9; i++) sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+        rest = (sum * 10) % 11;
+        if ((rest === 10) || (rest === 11)) rest = 0;
+        if (rest !== parseInt(cpf.substring(9, 10))) return false;
+        sum = 0;
+        for (let i = 1; i <= 10; i++) sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+        rest = (sum * 10) % 11;
+        if ((rest === 10) || (rest === 11)) rest = 0;
+        if (rest !== parseInt(cpf.substring(10, 11))) return false;
+        return true;
+    }
+    function validateCNPJ(cnpj) {
+        cnpj = cnpj.replace(/\D/g, '');
+        if (cnpj.length !== 14 || /^(\d)\1{13}$/.test(cnpj)) return false;
+        let size = cnpj.length - 2; let numbers = cnpj.substring(0, size); let digits = cnpj.substring(size); let sum = 0; let pos = size - 7;
+        for (let i = size; i >= 1; i--) { sum += numbers.charAt(size - i) * pos--; if (pos < 2) pos = 9; }
+        let result = sum % 11 < 2 ? 0 : 11 - sum % 11; if (result != digits.charAt(0)) return false;
+        size = size + 1; numbers = cnpj.substring(0, size); sum = 0; pos = size - 7;
+        for (let i = size; i >= 1; i--) { sum += numbers.charAt(size - i) * pos--; if (pos < 2) pos = 9; }
+        result = sum % 11 < 2 ? 0 : 11 - sum % 11; if (result != digits.charAt(1)) return false;
+        return true;
+    }
+
+    // --- MÁSCARAS ---
+    documentoInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length <= 11) {
+            value = value.replace(/(\d{3})(\d)/, '$1.$2'); value = value.replace(/(\d{3})(\d)/, '$1.$2'); value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        } else {
+            value = value.replace(/^(\d{2})(\d)/, '$1.$2'); value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3'); value = value.replace(/\.(\d{3})(\d)/, '.$1/$2'); value = value.replace(/(\d{4})(\d)/, '$1-$2');
+        }
+        e.target.value = value;
+    });
+    cepInput.addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').replace(/^(\d{5})(\d)/, '$1-$2');
+    });
+
+    // --- LÓGICA DA API DE CNPJ ---
+    documentoInput.addEventListener('blur', async function() {
+        const cnpj = this.value.replace(/\D/g, '');
+        if (cnpj.length !== 14) return; // Só busca se for um CNPJ completo
+
+        cnpjLoader.classList.remove('d-none');
+        nomeProdutorInput.disabled = true;
+        cnpjApiFeedback.textContent = '';
         
-        const form = document.querySelector('.needs-validation');
-        const submitBtn = document.querySelector('.submit-btn');
-        const btnText = document.querySelector('.btn-text');
-        const btnLoader = document.querySelector('.btn-loader');
-        
-        // Máscaras para CPF/CNPJ
-        const documentoInput = document.getElementById('documento_produtor');
-        
-        documentoInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
+        try {
+            const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`);
+            if (!response.ok) throw new Error('CNPJ não encontrado ou inválido.');
             
-            if (value.length <= 11) {
-                // CPF
-                value = value.replace(/(\d{3})(\d)/, '$1.$2');
-                value = value.replace(/(\d{3})(\d)/, '$1.$2');
-                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-            } else {
-                // CNPJ
-                value = value.replace(/^(\d{2})(\d)/, '$1.$2');
-                value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
-                value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
-                value = value.replace(/(\d{4})(\d)/, '$1-$2');
-            }
+            const data = await response.json();
+            nomeProdutorInput.value = data.razao_social || '';
             
-            e.target.value = value;
-        });
-        
-        // Validação ao submeter
-        form.addEventListener('submit', function(event) {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-            } else {
-                // Mostrar loading
-                btnText.style.display = 'none';
-                btnLoader.classList.remove('d-none');
-                submitBtn.disabled = true;
-            }
-            
+            // Força a validação do campo preenchido
+            performValidation(nomeProdutorInput);
             form.classList.add('was-validated');
-        });
-        
-        // Validação em tempo real
-        const inputs = form.querySelectorAll('input, textarea');
-        inputs.forEach(input => {
-            input.addEventListener('blur', function() {
-                if (this.checkValidity()) {
-                    this.classList.add('is-valid');
-                    this.classList.remove('is-invalid');
-                } else {
-                    this.classList.add('is-invalid');
-                    this.classList.remove('is-valid');
-                }
-            });
+
+        } catch (error) {
+            cnpjApiFeedback.textContent = error.message;
+            nomeProdutorInput.value = ''; // Limpa o campo em caso de erro
+        } finally {
+            cnpjLoader.classList.add('d-none');
+            nomeProdutorInput.disabled = false;
+        }
+    });
+
+    // --- LÓGICA DA API DE CEP ---
+    cepInput.addEventListener('blur', async function() {
+        const cep = this.value.replace(/\D/g, '');
+        if (cep.length !== 8) return;
+
+        cepLoader.classList.remove('d-none');
+        enderecoInput.disabled = true;
+        cidadeInput.disabled = true;
+        cepApiFeedback.textContent = '';
+
+        try {
+            const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+            const data = await response.json();
+
+            if (data.erro) throw new Error('CEP não encontrado.');
             
-            input.addEventListener('input', function() {
-                if (this.classList.contains('was-validated')) {
-                    if (this.checkValidity()) {
-                        this.classList.add('is-valid');
-                        this.classList.remove('is-invalid');
-                    } else {
-                        this.classList.add('is-invalid');
-                        this.classList.remove('is-valid');
-                    }
-                }
+            enderecoInput.value = data.logradouro || '';
+            cidadeInput.value = data.localidade || '';
+            
+            // Força a validação dos campos preenchidos
+            [enderecoInput, cidadeInput].forEach(field => {
+                performValidation(field);
             });
-        });
+            form.classList.add('was-validated');
+
+        } catch (error) {
+            cepApiFeedback.textContent = error.message;
+        } finally {
+            cepLoader.classList.add('d-none');
+            enderecoInput.disabled = false;
+            cidadeInput.disabled = false;
+        }
+    });
+
+    // --- VALIDAÇÃO GERAL E EM TEMPO REAL ---
+    function performValidation(field) {
+        const feedbackEl = field.closest('.mb-4, .col-md-6').querySelector('.invalid-feedback');
+        let isValid = true;
+        field.setCustomValidity(''); // Limpa validação customizada anterior
+
+        if (!field.checkValidity() || field.value.trim() === '') {
+            isValid = false;
+        } else {
+            // Validações específicas
+            switch(field.id) {
+                case 'documento_produtor':
+                    const cleanDoc = field.value.replace(/\D/g, '');
+                    if (cleanDoc.length === 11) {
+                        isValid = validateCPF(cleanDoc);
+                        feedbackEl.textContent = 'Por favor, insira um CPF válido.';
+                    } else if (cleanDoc.length === 14) {
+                        isValid = validateCNPJ(cleanDoc);
+                        feedbackEl.textContent = 'Por favor, insira um CNPJ válido.';
+                    } else {
+                        isValid = false;
+                        feedbackEl.textContent = 'O documento deve ter 11 (CPF) ou 14 (CNPJ) dígitos.';
+                    }
+                    break;
+                case 'data_colheita':
+                    const today = new Date().toISOString().split('T')[0];
+                    if (field.value > today) {
+                        isValid = false;
+                        feedbackEl.textContent = 'A data de colheita não pode ser no futuro.';
+                    }
+                    break;
+                case 'validade':
+                    const colheitaDate = document.getElementById('data_colheita').value;
+                    if (colheitaDate && field.value <= colheitaDate) {
+                        isValid = false;
+                        feedbackEl.textContent = 'A validade deve ser após a data da colheita.';
+                    }
+                    break;
+            }
+        }
         
-        // Auto-preenchimento de data
-        const today = new Date();
-        const dataColheitaInput = document.getElementById('data_colheita');
-        const validadeInput = document.getElementById('validade');
+        if (!isValid) {
+            field.setCustomValidity('Inválido'); // Necessário para a API de validação do browser
+        }
+    }
+
+    form.addEventListener('submit', function(event) {
+        form.querySelectorAll('input[required]').forEach(performValidation);
         
-        dataColheitaInput.addEventListener('change', function() {
-            if (this.value && !validadeInput.value) {
-                const colheitaDate = new Date(this.value);
-                colheitaDate.setDate(colheitaDate.getDate() + 30); // 30 dias após colheita
-                validadeInput.value = colheitaDate.toISOString().split('T')[0];
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            btnText.classList.add('d-none');
+            btnLoader.classList.remove('d-none');
+            submitBtn.disabled = true;
+        }
+        form.classList.add('was-validated');
+    });
+
+    // Adiciona validação ao sair do campo (blur)
+    form.querySelectorAll('input[required]').forEach(input => {
+        input.addEventListener('blur', function() {
+            // Para ser validado no blur, o campo precisa estar "sujo" (dirty)
+            if (this.value) { 
+                performValidation(this);
+                // Força a UI de validação do bootstrap
+                this.closest('form').classList.add('was-validated');
             }
         });
-    })();
+    });
+
+})();
 </script>
 
 {% endblock %}
