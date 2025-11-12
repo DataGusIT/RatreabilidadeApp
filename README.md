@@ -35,7 +35,7 @@ Aqui você pode inserir imagens da sua aplicação para demonstrar o visual e as
 
 | Página Inicial | Cadastro de Lote | Consulta do QR Code |
 | :---: | :---: | :---: |
-| *<img width="1898" height="1079" alt="Image" src="https://github.com/user-attachments/assets/7c2d0d52-b96a-4921-88eb-b7d0cd0f950b" />* | *<img width="1898" height="1079" alt="Image" src="https://github.com/user-attachments/assets/d31ed80d-25bc-496c-bc81-ab476ff193ec" />* | *Substitua este texto por sua imagem* |
+| *<img width="1898" height="1079" alt="Image" src="https://github.com/user-attachments/assets/7c2d0d52-b96a-4921-88eb-b7d0cd0f950b" />* | *<img width="1898" height="1079" alt="Image" src="https://github.com/user-attachments/assets/d31ed80d-25bc-496c-bc81-ab476ff193ec" />* | *<img width="1901" height="1079" alt="Image" src="https://github.com/user-attachments/assets/f72df29b-31a0-4295-8e08-73476c2f16b5" />* |
 
 ## Tecnologias
 
