@@ -3,671 +3,235 @@
 {% block title %}Lote Registrado com Sucesso!{% endblock %}
 
 {% block content %}
-<!-- Header de Sucesso -->
-<div class="success-header text-center mb-5">
-    <div class="success-animation">
-        <div class="checkmark-circle">
-            <div class="checkmark"></div>
+<div class="success-page-section">
+    <div class="container">
+        <!-- CABEÇALHO DA PÁGINA DE SUCESSO -->
+        <div class="page-header">
+            <div class="success-animation">
+                <div class="checkmark-circle">
+                    <div class="checkmark"></div>
+                </div>
+            </div>
+            <h1 class="header-title">Lote Registrado com Sucesso!</h1>
+            <p class="header-subtitle">
+                O Lote <span class="lote-badge">#{{ lote.id }}</span> foi criado e já está pronto para rastreabilidade.
+            </p>
         </div>
-    </div>
-    <h1 class="success-title">Lote Registrado com Sucesso!</h1>
-    <p class="success-subtitle">
-        Lote <span class="lote-number">#{{ lote.id }}</span> foi criado e está pronto para rastreabilidade.
-    </p>
-</div>
 
-<!-- Card Principal com QR Code -->
-<div class="card main-success-card shadow-lg border-0">
-    <div class="card-header text-center">
-        <div class="header-content">
-            <span class="header-icon text-success"><i class="fa-solid fa-qrcode fa-2x"></i></span>
-            <h3 class="header-title">QR Code Gerado</h3>
-            <p class="header-subtitle">Pronto para impressão e uso na embalagem.</p>
-        </div>
-    </div>
-
-    <div class="card-body">
-        <div class="row align-items-center">
-            <!-- QR Code Display -->
-            <div class="col-lg-5">
-                <div class="qr-display-container">
-                    <div class="qr-wrapper">
+        <!-- CARD PRINCIPAL COM QR CODE E INSTRUÇÕES -->
+        <div class="success-main-card">
+            <div class="row">
+                <!-- Coluna do QR Code -->
+                <div class="col-lg-5 qr-code-column">
+                    <div class="qr-display-container">
                         <img src="{{ url_for('static', filename='qrcodes/' + lote.qr_code_path) }}"
                              alt="QR Code do Lote {{ lote.id }}"
                              class="qr-image"
                              id="qrImage">
-                    </div>
-
-                    <div class="qr-actions mt-3">
-                        <button class="btn btn-primary btn-sm" onclick="downloadQR()">
-                            <i class="fa-solid fa-download me-2"></i>
-                            Baixar QR Code
-                        </button>
-                        <button class="btn btn-outline-secondary btn-sm" onclick="window.print()">
-                            <i class="fa-solid fa-print me-2"></i>
-                            Imprimir
-                        </button>
+                        <div class="qr-actions mt-4">
+                            <button class="btn btn-primary" onclick="downloadQR()">
+                                <i class="fa-solid fa-download me-2"></i>
+                                Baixar QR Code
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="window.print()">
+                                <i class="fa-solid fa-print me-2"></i>
+                                Imprimir
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Instruções -->
-            <div class="col-lg-7">
-                <div class="instructions-section">
-                    <h4 class="instructions-title">
-                        <i class="fa-solid fa-clipboard-list me-2"></i>
-                        Como usar o QR Code
-                    </h4>
-
-                    <div class="instruction-steps">
-                        <div class="step">
-                            <div class="step-number">1</div>
-                            <div class="step-content">
-                                <h5>Baixe ou Imprima</h5>
-                                <p>Clique em "Baixar QR Code" para salvar a imagem ou use "Imprimir" para imprimir diretamente.</p>
+                <!-- Coluna das Instruções -->
+                <div class="col-lg-7 instructions-column">
+                    <div class="instructions-section">
+                        <h4 class="instructions-title">
+                            <i class="fa-solid fa-clipboard-list me-2"></i>
+                            Próximos Passos
+                        </h4>
+                        <div class="instruction-steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h5>Baixe ou Imprima</h5>
+                                    <p>Salve a imagem do QR Code ou imprima diretamente para colar na sua embalagem.</p>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="step">
-                            <div class="step-number">2</div>
-                            <div class="step-content">
-                                <h5>Cole na Embalagem</h5>
-                                <p>Fixe o QR Code em local visível na embalagem do produto para fácil acesso dos consumidores.</p>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h5>Cole na Embalagem</h5>
+                                    <p>Fixe o código em um local visível do produto para fácil escaneamento pelo consumidor.</p>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="step">
-                            <div class="step-number">3</div>
-                            <div class="step-content">
-                                <h5>Rastreabilidade Ativa</h5>
-                                <p>Consumidores podem escanear e acessar todas as informações de origem do produto.</p>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h5>Rastreabilidade Ativa</h5>
+                                    <p>Qualquer pessoa com um smartphone pode escanear e ver a origem do seu produto.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<!-- Informações do Lote -->
-<div class="lote-summary mt-4">
-    <div class="card border-0 shadow-sm">
-        <div class="card-body">
-            <h5 class="card-title">
-                <i class="fa-solid fa-box-archive me-2"></i>
-                Resumo do Lote Criado
-            </h5>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="summary-item">
-                        <strong>ID do Lote:</strong>
-                        <span class="badge bg-success ms-2">#{{ lote.id }}</span>
-                    </div>
+             <!-- Rodapé do Card com Resumo -->
+            <div class="card-footer">
+                <div class="summary-item">
+                    <strong>ID do Lote:</strong>
+                    <span>#{{ lote.id }}</span>
                 </div>
-                <div class="col-md-6">
-                    <div class="summary-item">
-                        <strong>Status:</strong>
-                        <span class="badge bg-primary ms-2">Ativo para Rastreamento</span>
-                    </div>
+                <div class="summary-item">
+                    <strong>Status:</strong>
+                    <span class="status-badge">Ativo para Rastreamento</span>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- Ações Principais -->
-<div class="action-buttons text-center mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="button-group">
-                <a href="{{ url_for('registrar_lote') }}" class="btn btn-success btn-lg action-btn">
-                    <i class="fa-solid fa-plus btn-icon"></i>
-                    <span class="btn-text">Registrar Novo Lote</span>
-                </a>
-
-                <a href="{{ url_for('ver_lote', lote_id=lote.id) }}" target="_blank" class="btn btn-outline-primary btn-lg action-btn">
-                    <i class="fa-solid fa-eye btn-icon"></i>
-                    <span class="btn-text">Visualizar Página Pública</span>
-                </a>
-
-                <a href="{{ url_for('profile') }}" class="btn btn-outline-secondary btn-lg action-btn">
-                    <i class="fa-solid fa-user-circle btn-icon"></i>
-                    <span class="btn-text">Voltar ao Perfil</span>
-                </a>
-            </div>
+        <!-- AÇÕES PRINCIPAIS -->
+        <div class="action-buttons">
+            <a href="{{ url_for('registrar_lote') }}" class="btn-primary-modern">
+                <i class="fa-solid fa-plus me-2"></i>
+                Registrar Novo Lote
+            </a>
+            <a href="{{ url_for('ver_lote', lote_id=lote.id) }}" target="_blank" class="btn btn-outline-primary">
+                <i class="fa-solid fa-eye me-2"></i>
+                Visualizar Página Pública
+            </a>
+            <a href="{{ url_for('profile') }}" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-user-circle me-2"></i>
+                Voltar ao Perfil
+            </a>
         </div>
     </div>
 </div>
 
-<!-- O CSS e o SCRIPT permanecem exatamente os mesmos -->
 <style>
-    /* Variáveis CSS para Cores, Sombras e Transições */
     :root {
-        --primary-color: #007bff; /* Azul primário */
-        --secondary-color: #28a745; /* Verde para sucesso */
-        --accent-color: #6f42c1; /* Roxo (opcional, para destaque de cartão) */
-        --text-primary: #343a40; /* Texto escuro */
-        --text-secondary: #6c757d; /* Texto cinza */
-        --surface: #ffffff; /* Fundo de cartões/elementos */
-        --surface-secondary: #f8f9fa; /* Fundo de seções/headers */
-        --neutral-100: #e9ecef; /* Borda clara */
-        --neutral-200: #dee2e6; /* Borda um pouco mais escura */
-        --neutral-300: #ced4da; /* Bordas e divisores */
-
-        --border-radius: .5rem;
-        --border-radius-lg: .75rem;
-
-        --shadow-sm: 0 .125rem .25rem rgba(0,0,0,.075);
-        --shadow-md: 0 .25rem .75rem rgba(0,0,0,.09);
-        --shadow-lg: 0 .5rem 1.5rem rgba(0,0,0,.12);
-
-        --transition-speed: 0.3s;
-        --transition-timing: ease-in-out;
-        --transition: all var(--transition-speed) var(--transition-timing);
+        --primary-green: #34C759;
+        --gradient-start: #34C759;
+        --gradient-end: #30D158;
+        --text-dark: #1a1a1a;
+        --text-gray: #6b7280;
+        --border-light: #e5e7eb;
+        --surface-secondary: #f9fafb;
     }
 
-    body {
-        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-        background-color: var(--surface-secondary);
-        color: var(--text-primary);
+    /* --- Layout Principal --- */
+    .success-page-section {
+        padding-top: 100px; /* Espaçamento para o navbar fixo */
+        padding-bottom: 4rem;
     }
 
-    /* Header de Sucesso */
-    .success-header {
-        padding: 3rem 0;
-        background: linear-gradient(to right, #d4edda, #c3e6cb); /* Fundo suave para o header */
-        border-bottom: 1px solid var(--neutral-200);
-    }
-
-    .success-animation {
-        margin-bottom: 2rem;
-    }
-
-    .checkmark-circle {
-        width: 90px;
-        height: 90px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--secondary-color) 0%, #30D158 100%);
-        margin: 0 auto;
-        position: relative;
-        box-shadow: var(--shadow-lg);
-        animation: checkmarkScale var(--transition-speed) ease-out;
-    }
-
-    .checkmark {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 30px;
-        height: 18px;
-        border: solid white;
-        border-width: 0 0 5px 5px;
-        transform: translate(-50%, -60%) rotate(-45deg);
-        animation: checkmarkDraw 0.4s ease-out 0.2s backwards;
-    }
-
-    @keyframes checkmarkScale {
-        0% { transform: scale(0); opacity: 0; }
-        50% { transform: scale(1.1); opacity: 1; }
-        100% { transform: scale(1); }
-    }
-
-    @keyframes checkmarkDraw {
-        0% { width: 0; height: 0; }
-        100% { width: 30px; height: 18px; }
-    }
-
-    .success-title {
-        font-weight: 700;
-        color: var(--text-primary);
-        font-size: 2.8rem;
-        margin-bottom: 0.8rem;
-    }
-
-    .success-subtitle {
-        color: var(--text-secondary);
-        font-size: 1.35rem;
-        margin: 0;
-    }
-
-    .lote-number {
-        background: linear-gradient(135deg, var(--secondary-color) 0%, #30D158 100%);
-        color: white;
-        padding: 0.3rem 0.9rem;
-        border-radius: 25px;
-        font-weight: 600;
-        font-size: 1.1rem;
-        display: inline-block;
-        margin-left: 0.5rem;
-        box-shadow: var(--shadow-sm);
-    }
-
-    /* Card Principal */
-    .main-success-card {
-        border-radius: var(--border-radius-lg);
-        overflow: hidden;
-        margin-bottom: 2.5rem;
-        box-shadow: var(--shadow-lg);
-    }
-
-    .card-header {
-        background: var(--surface);
-        border-bottom: 1px solid var(--neutral-200);
-        padding: 2.5rem;
-        border-top-left-radius: var(--border-radius-lg);
-        border-top-right-radius: var(--border-radius-lg);
-    }
-
-    .header-content {
-        max-width: 450px;
-        margin: 0 auto;
-    }
-
-    .header-icon {
-        font-size: 1.5rem; /* Ajustado para ícone */
-        display: block;
-        margin-bottom: 1rem;
-    }
-
-    .header-title {
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 0.6rem;
-        font-size: 1.8rem;
-    }
-
-    .header-subtitle {
-        color: var(--text-secondary);
-        margin: 0;
-        font-size: 1.15rem;
-    }
-
-    /* QR Code Display */
-    .qr-display-container {
+    /* --- Cabeçalho --- */
+    .page-header {
         text-align: center;
-        padding: 2.5rem;
+        margin-bottom: 3rem;
+    }
+    .success-animation { margin-bottom: 1.5rem; }
+    .checkmark-circle {
+        width: 80px; height: 80px; border-radius: 50%;
+        background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+        margin: 0 auto; position: relative;
+        box-shadow: 0 8px 25px rgba(52, 199, 89, 0.3);
+        animation: checkmarkScale 0.4s ease-out;
+    }
+    .checkmark {
+        width: 28px; height: 16px; border: solid white;
+        border-width: 0 0 5px 5px;
+        position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%, -60%) rotate(-45deg);
+        animation: checkmarkDraw 0.5s ease-out 0.2s backwards;
+    }
+    @keyframes checkmarkScale { from { transform: scale(0); } to { transform: scale(1); } }
+    @keyframes checkmarkDraw { from { width: 0; height: 0; } to { width: 28px; height: 16px; } }
+    
+    .header-title {
+        font-weight: 800; font-size: 2.5rem; color: var(--text-dark);
+    }
+    .header-subtitle {
+        font-size: 1.2rem; color: var(--text-gray); margin-top: 0.5rem;
+    }
+    .lote-badge {
+        background-color: var(--primary-green); color: white;
+        padding: 0.25rem 0.75rem; border-radius: 50px; font-weight: 600;
+    }
+
+    /* --- Card Principal --- */
+    .success-main-card {
+        background: #fff; border: 1px solid var(--border-light);
+        border-radius: 20px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    /* --- Coluna do QR Code --- */
+    .qr-code-column {
         background-color: var(--surface-secondary);
-        border-right: 1px solid var(--neutral-200); /* Separador visual */
+        display: flex; align-items: center; justify-content: center;
+        padding: 3rem;
     }
-
-    .qr-wrapper {
-        background: var(--surface);
-        border: 4px solid var(--neutral-200);
-        border-radius: var(--border-radius-lg);
-        padding: 2.5rem;
-        display: inline-block;
-        transition: var(--transition);
-        box-shadow: var(--shadow-sm);
-    }
-
-    .qr-wrapper:hover {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 6px rgba(0, 122, 255, 0.15);
-        transform: scale(1.03) rotate(2deg);
-    }
-
+    .qr-display-container { text-align: center; }
     .qr-image {
-        max-width: 280px;
-        width: 100%;
-        height: auto;
-        display: block;
-        border-radius: var(--border-radius-sm);
+        max-width: 220px; width: 100%; border-radius: 16px;
+        padding: 1rem; background: #fff; border: 1px solid var(--border-light);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.07);
     }
-
-    .qr-actions {
-        display: flex;
-        gap: 1.25rem;
-        justify-content: center;
-        margin-top: 1.5rem; /* Adjusted margin top */
-    }
-
-    .qr-actions .btn {
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
-        border-radius: var(--border-radius);
-        display: inline-flex;
-        align-items: center;
-        box-shadow: var(--shadow-sm);
-        transition: var(--transition);
-    }
-
-    .qr-actions .btn:hover {
-        transform: translateY(-2px);
-    }
-
-    /* Instruções */
-    .instructions-section {
-        padding: 2.5rem;
-    }
-
+    .qr-actions { display: flex; gap: 1rem; justify-content: center; }
+    
+    /* --- Coluna das Instruções --- */
+    .instructions-column { padding: 3rem; }
     .instructions-title {
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 2.5rem;
-        font-size: 1.7rem;
+        font-weight: 700; color: var(--text-dark); margin-bottom: 2rem;
     }
-
-    .instruction-steps {
-        display: flex;
-        flex-direction: column;
-        gap: 2.2rem;
-    }
-
-    .step {
-        display: flex;
-        align-items: flex-start;
-        gap: 1.8rem;
-    }
-
+    .instruction-steps { display: flex; flex-direction: column; gap: 1.5rem; }
+    .step { display: flex; align-items: flex-start; gap: 1rem; }
     .step-number {
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--primary-color) 0%, #0056b3 100%);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 1.2rem;
-        flex-shrink: 0;
-        box-shadow: var(--shadow-sm);
+        width: 36px; height: 36px; border-radius: 50%;
+        background-color: var(--primary-green); color: white;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 700; flex-shrink: 0;
+    }
+    .step-content h5 { font-weight: 600; margin-bottom: 0.25rem; }
+    .step-content p { color: var(--text-gray); margin: 0; line-height: 1.6; }
+
+    /* --- Rodapé do Card --- */
+    .card-footer {
+        background-color: var(--surface-secondary); border-top: 1px solid var(--border-light);
+        padding: 1rem 2rem; display: flex; gap: 2rem; flex-wrap: wrap;
+    }
+    .summary-item { display: flex; align-items: center; gap: 0.5rem; }
+    .status-badge {
+        background-color: #0d6efd; color: white;
+        padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.85em;
     }
 
-    .step-content h5 {
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 0.6rem;
-        font-size: 1.2rem;
-    }
-
-    .step-content p {
-        color: var(--text-secondary);
-        margin: 0;
-        line-height: 1.6;
-    }
-
-    /* Resumo do Lote */
-    .lote-summary .card {
-        background: linear-gradient(135deg, rgba(40, 167, 69, 0.08) 0%, rgba(32, 136, 55, 0.08) 100%);
-        border-left: 5px solid var(--secondary-color);
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow-sm);
-    }
-
-    .lote-summary .card-body {
-        padding: 1.5rem;
-    }
-
-    .lote-summary .card-title {
-        font-size: 1.4rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        display: flex; /* Added display flex for icon alignment */
-        align-items: center; /* Added align-items for icon alignment */
-        margin-bottom: 1.5rem; /* Adjusted margin bottom */
-        border-bottom: 1px dashed var(--neutral-200); /* Linha tracejada */
-        padding-bottom: 0.8rem;
-    }
-
-    .summary-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 0.75rem;
-    }
-
-    .summary-item strong {
-        color: var(--text-primary);
-        margin-right: 0.6rem;
-        font-weight: 500;
-        min-width: 80px; /* Alinha os pontos */
-    }
-
-    .lote-summary .badge {
-        padding: 0.4em 0.8em;
-        font-size: 0.9em;
-        border-radius: 0.5rem;
-    }
-
-    /* Botões de Ação */
+    /* --- Botões de Ação Inferiores --- */
     .action-buttons {
-        margin-top: 4rem;
-        margin-bottom: 4rem;
+        text-align: center; margin-top: 3rem;
+        display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;
     }
-
-    .button-group {
-        display: flex;
-        flex-direction: column;
-        gap: 1.2rem;
-        max-width: 600px;
-        margin: 0 auto;
+    .action-buttons .btn, .action-buttons .btn-primary-modern {
+        font-weight: 600; padding: 0.8rem 1.8rem; border-radius: 12px;
     }
-
-    .action-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.8rem;
-        padding: 1.4rem 2.2rem;
-        font-weight: 600;
-        transition: var(--transition);
-        border-radius: var(--border-radius-lg);
-        font-size: 1.15rem;
-        box-shadow: var(--shadow-sm);
+    /* Copiado para consistência */
+    .btn-primary-modern {
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: white;
+        text-decoration: none; border: none; box-shadow: 0 4px 15px rgba(52, 199, 89, 0.2);
+        transition: all 0.3s ease;
     }
+    .btn-primary-modern:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(52, 199, 89, 0.3); color: white; }
 
-    .action-btn.btn-success {
-        background: linear-gradient(135deg, var(--secondary-color) 0%, #218838 100%);
-        border-color: #218838;
-        color: white;
+    @media (max-width: 991.98px) {
+        .qr-code-column { border-bottom: 1px solid var(--border-light); }
     }
-
-    .action-btn.btn-outline-primary {
-        color: var(--primary-color);
-        border-color: var(--primary-color);
-        background-color: white;
-    }
-
-    .action-btn.btn-outline-secondary {
-        color: var(--text-secondary);
-        border-color: var(--neutral-200);
-        background-color: white;
-    }
-
-    .action-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--shadow-lg);
-    }
-
-    .btn-icon {
-        font-size: 1.1rem; /* Ajustado para melhor alinhamento */
-    }
-
-    .btn-text {
-        font-size: 1.15rem;
-    }
-
-    /* Responsividade */
-    @media (min-width: 768px) {
-        .button-group {
-            flex-direction: row;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .action-btn {
-            flex: 1 1 auto;
-            max-width: 30%;
-        }
-    }
-
-    @media (min-width: 992px) {
-        .instructions-section {
-            padding-left: 3rem;
-        }
-    }
-
-    @media (max-width: 992px) {
-        .instructions-section,
-        .qr-display-container {
-            padding: 2rem 1.5rem;
-        }
-
-        .qr-display-container {
-            border-right: none;
-            border-bottom: 1px solid var(--neutral-200);
-            margin-top: 2rem;
-            padding-top: 3rem;
-        }
-
-        .lote-summary .card-title {
-            text-align: center;
-        }
-    }
-
     @media (max-width: 768px) {
-        .success-title {
-            font-size: 2.2rem;
-        }
-
-        .success-subtitle {
-            font-size: 1.15rem;
-        }
-
-        .checkmark-circle {
-            width: 70px;
-            height: 70px;
-        }
-
-        .checkmark {
-            width: 22px;
-            height: 14px;
-        }
-
-        .qr-image {
-            max-width: 180px;
-        }
-
-        .step {
-            flex-direction: column;
-            text-align: center;
-            gap: 1rem;
-        }
-
-        .step-number {
-            margin: 0 auto;
-        }
-
-        .instructions-title {
-            font-size: 1.4rem;
-            text-align: center;
-        }
-
-        .qr-actions {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .qr-actions .btn {
-            width: 80%;
-            max-width: 250px;
-        }
-
-        .action-btn {
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
-            width: 90%;
-            max-width: 300px;
-            margin: 0 auto;
-        }
-        .button-group {
-            align-items: center;
-        }
-    }
-
-    /* Print Styles */
-    @media print {
-        body {
-            background-color: #fff !important;
-        }
-        .action-buttons,
-        .instructions-section,
-        .success-header,
-        .lote-summary {
-            display: none !important;
-        }
-
-        .main-success-card {
-            box-shadow: none !important;
-            border: none !important;
-            margin-top: 0 !important;
-        }
-
-        .card-header {
-            background: white !important;
-            border-bottom: 1px solid #eee !important;
-        }
-
-        .qr-wrapper {
-            border: 2px solid #000 !important;
-            box-shadow: none !important;
-            transform: none !important;
-            padding: 1rem;
-        }
-        .qr-image {
-            max-width: 200px !important;
-            width: 100% !important;
-            margin: 0 auto !important;
-        }
-        .qr-display-container {
-            border-right: none !important;
-            padding: 1rem !important;
-        }
-        
-        .qr-actions {
-            display: none !important;
-        }
-    }
-
-    /* Animações de Entrada */
-    @keyframes slideInUp {
-        from {
-            transform: translateY(20px);
-            opacity: 0;
-        }
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translate3d(0, 20px, 0);
-        }
-        to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-        }
-    }
-
-    @keyframes fadeInLeft {
-        from {
-            opacity: 0;
-            transform: translate3d(-20px, 0, 0);
-        }
-        to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-        }
+        .header-title { font-size: 2rem; }
+        .header-subtitle { font-size: 1.1rem; }
+        .success-main-card { padding: 0; }
+        .qr-code-column, .instructions-column { padding: 2rem 1.5rem; }
     }
 </style>
 
 <script>
-    // Função para baixar o QR Code
     function downloadQR() {
         const qrImage = document.getElementById('qrImage');
         const link = document.createElement('a');
@@ -677,14 +241,6 @@
         link.click();
         document.body.removeChild(link);
     }
-
-    // Animação de entrada escalonada para os passos
-    document.addEventListener('DOMContentLoaded', function() {
-        const steps = document.querySelectorAll('.step');
-        steps.forEach((step, index) => {
-            step.style.animation = `fadeInLeft 0.6s ease-out ${0.2 * index}s backwards`;
-        });
-    });
 </script>
 
 {% endblock %}

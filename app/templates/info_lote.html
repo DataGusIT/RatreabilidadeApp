@@ -3,61 +3,251 @@
 {% block title %}Informações do Lote #{{ lote.id }}{% endblock %}
 
 {% block content %}
-<div class="card shadow-lg border-0">
-    <div class="card-header text-center">
-        <h2>Informações de Rastreabilidade</h2>
-    </div>
-    <div class="card-body p-lg-5">
-        {% if lote and lote.propriedade and lote.propriedade.produtor %}
-            <div class="row align-items-center">
-                <!-- Coluna com as informações -->
-                <div class="col-md-7">
-                    <h3 class="mb-4">
-                        <span class="badge bg-success me-2">Lote #{{ lote.id }}</span>
-                    </h3>
-                    
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>Produtor:</strong> {{ lote.propriedade.produtor.nome }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>CPF/CNPJ:</strong> {{ lote.propriedade.produtor.documento }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Propriedade:</strong> {{ lote.propriedade.nome_propriedade }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Origem:</strong> {{ lote.propriedade.endereco }}, {{ lote.propriedade.cidade }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Data da Colheita:</strong> {{ lote.data_colheita.strftime('%d/%m/%Y') }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Validade Recomendada:</strong> {{ lote.validade.strftime('%d/%m/%Y') }}
-                        </li>
-                    </ul>
+<div class="lote-info-section">
+    <div class="container">
+        <!-- CABEÇALHO DA PÁGINA -->
+        <div class="page-header">
+            <h1 class="header-title">Informações de Rastreabilidade</h1>
+            <p class="header-subtitle">Consulta realizada em: {{ hora_atual.strftime('%d/%m/%Y às %H:%M') }}</p>
+        </div>
 
-                    <h5 class="mt-4 section-title">Boas Práticas Utilizadas:</h5>
-                    <p class="text-secondary">{{ lote.boas_praticas | nl2br }}</p>
+        {% if lote and lote.propriedade and lote.propriedade.produtor %}
+        <!-- CARD PRINCIPAL COM AS INFORMAÇÕES -->
+        <div class="info-main-card">
+            <div class="row">
+                <!-- Coluna com as informações detalhadas -->
+                <div class="col-lg-7 info-details-column">
+                    <h3 class="lote-id-badge">Lote #{{ lote.id }}</h3>
+                    
+                    <div class="info-list">
+                    <div class="info-item">
+                        <div class="info-label"><i class="fa-solid fa-user-tie"></i>Produtor</div>
+                        <div class="info-value">{{ lote.propriedade.produtor.nome }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fa-solid fa-id-card"></i>CPF/CNPJ</div>
+                        <div class="info-value">{{ lote.propriedade.produtor.documento }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fa-solid fa-tractor"></i>Propriedade</div>
+                        <div class="info-value">{{ lote.propriedade.nome_propriedade }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fa-solid fa-map-location-dot"></i>Origem</div>
+                        <div class="info-value">{{ lote.propriedade.endereco }}, {{ lote.propriedade.cidade }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fa-solid fa-calendar-check"></i>Data da Colheita</div>
+                        <div class="info-value">{{ lote.data_colheita.strftime('%d/%m/%Y') }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fa-solid fa-calendar-times"></i>Validade Recomendada</div>
+                        <div class="info-value">{{ lote.validade.strftime('%d/%m/%Y') }}</div>
+                    </div>
+                </div>
+
+                {% if lote.boas_praticas %}
+                <div class="boas-praticas-section">
+                    <h5 class="section-title"><i class="fa-solid fa-leaf"></i>Boas Práticas Utilizadas</h5>
+                    <p class="praticas-text">{{ lote.boas_praticas | nl2br }}</p>
+                </div>
+                {% endif %}
                 </div>
                 
                 <!-- Coluna com o QR Code -->
-                <div class="col-md-5 text-center mt-4 mt-md-0">
-                    <div class="qr-container">
+                <div class="col-lg-5 qr-code-column">
+                    <div class="qr-code-wrapper">
                         <img src="{{ url_for('static', filename='qrcodes/' + lote.qr_code_path) }}" 
                              alt="QR Code do Lote {{ lote.id }}" 
-                             class="img-fluid rounded">
+                             class="qr-image">
+                        <p class="scan-time">Escaneie para validar a origem</p>
                     </div>
-                    <!-- LINHA CORRIGIDA -->
-                    <p class="text-secondary mt-2"><small>Escaneado em: {{ hora_atual.strftime('%d/%m/%Y %H:%M') }}</small></p>
                 </div>
             </div>
+        </div>
         {% else %}
-            <div class="alert alert-danger text-center" role="alert">
-                <h2>Lote não encontrado!</h2>
-                <p>As informações para este lote não estão disponíveis. Verifique o QR Code e tente novamente.</p>
+            <!-- ESTADO DE LOTE NÃO ENCONTRADO -->
+            <div class="empty-state">
+                <i class="fa-solid fa-qrcode-slash empty-state-icon"></i>
+                <h3 class="empty-state-title">Lote não encontrado!</h3>
+                <p class="empty-state-text">As informações para este lote não estão disponíveis. Verifique o QR Code e tente novamente.</p>
             </div>
         {% endif %}
     </div>
 </div>
+
+<style>
+    :root {
+        --primary-green: #34C759;
+        --text-dark: #1a1a1a;
+        --text-gray: #6b7280;
+        --border-light: #e5e7eb;
+        --surface-secondary: #f9fafb;
+    }
+
+    /* --- Layout Principal --- */
+    .lote-info-section {
+        padding-top: 100px;
+        padding-bottom: 4rem;
+        background-color: var(--surface-secondary);
+        min-height: 100vh;
+    }
+
+    /* --- Cabeçalho --- */
+    .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    .header-title {
+        font-weight: 800;
+        font-size: 2.5rem;
+        color: var(--text-dark);
+    }
+    .header-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-gray);
+        margin-top: 0.5rem;
+    }
+
+    /* --- Card Principal --- */
+    .info-main-card {
+        background: #fff;
+        border: 1px solid var(--border-light);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    /* --- Coluna de Detalhes --- */
+    .info-details-column {
+        padding: 3rem;
+    }
+    .lote-id-badge {
+        display: inline-block;
+        background-color: var(--primary-green);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+    }
+    .info-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .info-item {
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border-light);
+    }
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    .info-label {
+        font-weight: 600;
+        color: var(--text-gray);
+        font-size: 0.9rem;
+        margin-bottom: 0.35rem; /* Leve ajuste para mais espaço */
+        display: flex;
+        align-items: center;
+    }
+    .info-label i {
+        width: 20px;
+        margin-right: 0.75rem; /* <<< ESPAÇAMENTO AUMENTADO AQUI */
+    }
+    .info-value {
+        font-size: 1.1rem;
+        color: var(--text-dark);
+        padding-left: 32px; /* <<< PADDING AJUSTADO PARA MANTER O ALINHAMENTO (20px + 12px) */
+    }
+
+    /* --- Seção de Boas Práticas --- */
+    .boas-praticas-section {
+        margin-top: 2rem;
+        background-color: var(--surface-secondary);
+        padding: 1.5rem;
+        border-radius: 12px;
+    }
+    .section-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--text-dark);
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+    }
+     .section-title i {
+        margin-right: 0.75rem; /* Espaçamento adicionado aqui também */
+    }
+    .praticas-text {
+        color: var(--text-gray);
+        line-height: 1.7;
+    }
+
+    /* --- Coluna do QR Code --- */
+    .qr-code-column {
+        background-color: var(--surface-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+        border-left: 1px solid var(--border-light);
+    }
+    .qr-code-wrapper {
+        text-align: center;
+    }
+    .qr-image {
+        max-width: 250px;
+        width: 100%;
+        border-radius: 16px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .scan-time {
+        margin-top: 1rem;
+        color: var(--text-gray);
+        font-size: 0.9rem;
+    }
+
+    /* --- Estado Vazio/Erro --- */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 1rem;
+        background: #fff;
+        border: 1px solid var(--border-light);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+    .empty-state-icon {
+        font-size: 5rem;
+        color: #ef4444; /* Vermelho */
+        margin-bottom: 1.5rem;
+    }
+    .empty-state-title {
+        font-weight: 700;
+        color: var(--text-dark);
+    }
+    .empty-state-text {
+        color: var(--text-gray);
+        font-size: 1.1rem;
+        max-width: 500px;
+        margin: 0.5rem auto 0 auto;
+    }
+    
+    @media (max-width: 991.98px) {
+        .qr-code-column {
+            border-left: none;
+            border-top: 1px solid var(--border-light);
+            order: -1; /* Move o QR code para cima em telas menores */
+        }
+        .info-details-column {
+            padding-top: 2rem;
+        }
+    }
+    @media (max-width: 768px) {
+        .header-title { font-size: 2rem; }
+        .header-subtitle { font-size: 1.1rem; }
+        .info-details-column, .qr-code-column { padding: 2rem 1.5rem; }
+    }
+</style>
 {% endblock %}

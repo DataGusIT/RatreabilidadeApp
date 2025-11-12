@@ -44,14 +44,15 @@ def register():
 @app.route('/profile')
 @login_required
 def profile():
-    # Encontra todos os lotes associados ao produtor do usuário logado
-    lotes = Lote.query.join(Propriedade).join(Produtor).filter(Produtor.user_id == current_user.id).order_by(Lote.data_criacao.desc()).all()
+    # Encontra todos os lotes criados pelo usuário logado
+    lotes = Lote.query.filter_by(user_id=current_user.id).order_by(Lote.data_criacao.desc()).all()
     return render_template('profile.html', title='Meu Perfil', lotes=lotes)
 
 @app.route('/registrar', methods=['GET', 'POST'])
 @login_required
 def registrar_lote():
     if request.method == 'POST':
+        # ... (coleta dos dados do formulário continua a mesma)
         nome_produtor = request.form.get('nome_produtor')
         documento_produtor = request.form.get('documento_produtor')
         nome_propriedade = request.form.get('nome_propriedade')
@@ -64,17 +65,28 @@ def registrar_lote():
         data_colheita = datetime.strptime(data_colheita_str, '%Y-%m-%d').date()
         validade = datetime.strptime(validade_str, '%Y-%m-%d').date()
         
-        produtor = Produtor.query.filter_by(user_id=current_user.id).first()
+        # --- NOVA LÓGICA "ENCONTRE OU CRIE" ---
+
+        # 1. Procura por um produtor com o documento informado
+        produtor = Produtor.query.filter_by(documento=documento_produtor).first()
+        
         if not produtor:
-            produtor = Produtor(nome=nome_produtor, documento=documento_produtor, user_id=current_user.id)
+            # Se não existir, CRIA um novo registro de produtor
+            produtor = Produtor(nome=nome_produtor, documento=documento_produtor)
             db.session.add(produtor)
         else:
-            # Atualiza os dados do produtor se necessário
+            # Se já existir, apenas garante que o nome está atualizado
             produtor.nome = nome_produtor
-            produtor.documento = documento_produtor
+        
+        # O commit é feito fora para consolidar a criação ou atualização
         db.session.commit()
         
-        propriedade = Propriedade.query.filter_by(nome_propriedade=nome_propriedade, produtor_id=produtor.id).first()
+        # 2. Faz o mesmo para a Propriedade, vinculada ao Produtor encontrado/criado
+        propriedade = Propriedade.query.filter_by(
+            nome_propriedade=nome_propriedade, 
+            produtor_id=produtor.id
+        ).first()
+
         if not propriedade:
             propriedade = Propriedade(
                 nome_propriedade=nome_propriedade,
@@ -83,34 +95,36 @@ def registrar_lote():
                 produtor_id=produtor.id
             )
             db.session.add(propriedade)
+        
+        # Consolida a criação da propriedade se for o caso
         db.session.commit()
 
+        # 3. Cria o novo lote, associando o ID do usuário logado
         novo_lote = Lote(
             data_colheita=data_colheita,
             validade=validade,
             boas_praticas=boas_praticas,
-            propriedade_id=propriedade.id
+            propriedade_id=propriedade.id,
+            user_id=current_user.id  # <-- Ponto chave da alteração!
         )
         db.session.add(novo_lote)
         db.session.commit()
 
+        # ... (resto do código para gerar QR Code continua igual)
         qr_code_url = url_for('ver_lote', lote_id=novo_lote.id, _external=True)
-        
         qr_img = qrcode.make(qr_code_url)
         qr_code_filename = f'lote_{novo_lote.id}.png'
         qr_code_path = os.path.join(app.root_path, 'static/qrcodes', qr_code_filename)
-        
         os.makedirs(os.path.dirname(qr_code_path), exist_ok=True)
         qr_img.save(qr_code_path)
-
         novo_lote.qr_code_path = qr_code_filename
         db.session.commit()
 
         return redirect(url_for('registro_sucesso', lote_id=novo_lote.id))
         
-    # Preenche o formulário com dados do produtor existente, se houver
-    produtor = current_user.produtor
-    return render_template('registro_lote.html', title='Registrar Lote', produtor=produtor)
+    # Como não há mais 'produtor' direto no usuário, esta parte pode ser removida ou ajustada.
+    # Por enquanto, vamos remover para evitar erros.
+    return render_template('registro_lote.html', title='Registrar Lote', produtor=None)
 
 @app.route('/lote/<int:lote_id>/sucesso')
 @login_required

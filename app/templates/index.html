@@ -3,209 +3,669 @@
 {% block title %}Início{% endblock %}
 
 {% block content %}
-<div class="hero-section text-center mb-5">
-    <div class="hero-content">
-        <div class="hero-icon mb-4">
-            <i class="fa-solid fa-seedling" style="font-size: 4rem; color: #34C759;"></i>
+<style>
+    /* Remove o container do main para permitir full width */
+    main.container-fluid {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin-top: 70px !important;
+        margin-bottom: 0 !important;
+    }
+</style>
+<div class="modern-hero">
+    <div class="hero-background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+    
+    <div class="hero-content-wrapper">
+        <div class="hero-badge">
+            <i class="fa-solid fa-seedling me-2"></i>
+            Tecnologia no Campo
         </div>
-        <h1 class="hero-title display-4 fw-bold mb-4">
-            Bem-vindo ao Sistema de 
-            <span style="background: linear-gradient(135deg, #34C759 0%, #30D158 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                Rastreabilidade Rural
-            </span>
+        
+        <h1 class="hero-title">
+            Sistema de Rastreabilidade
+            <span class="gradient-text">Rural Inteligente</span>
         </h1>
-        <p class="hero-subtitle lead text-muted mb-5" style="max-width: 600px; margin: 0 auto;">
-            Garanta a origem e qualidade dos seus produtos com nosso sistema completo de rastreabilidade. 
-            Transparência do campo à mesa.
+        
+        <p class="hero-description">
+            Transforme sua produção rural com tecnologia de ponta. Rastreabilidade completa, 
+            transparência total e confiança do produtor ao consumidor.
         </p>
         
         <div class="hero-actions">
-            <a href="{{ url_for('registrar_lote') }}" class="btn btn-success btn-lg me-3">
-                <i class="fa-solid fa-clipboard-list me-2"></i>
+            <a href="{{ url_for('registrar_lote') }}" class="btn-primary-modern">
+                <i class="fa-solid fa-plus-circle me-2"></i>
                 Registrar Novo Lote
             </a>
-            <button class="btn btn-outline-secondary btn-lg" onclick="scrollToFeatures()">
+            <button class="btn-secondary-modern" onclick="scrollToFeatures()">
                 <i class="fa-solid fa-qrcode me-2"></i>
                 Escanear QR Code
             </button>
         </div>
-    </div>
-</div>
-
-<div class="features-section" id="features">
-    <div class="row g-4">
-        <div class="col-lg-4">
-            <div class="feature-card h-100">
-                <div class="feature-icon">
-                    <!-- Ícone corrigido: usei 'fa-clipboard-check' para representar verificação e rastreabilidade -->
-                    <i class="fa-solid fa-clipboard-check" style="font-size: 3rem; color: #34C759;"></i>
-                </div>
-                <div class="feature-content">
-                    <h4 class="feature-title">Rastreabilidade Completa</h4>
-                    <p class="feature-description">
-                        Acompanhe cada produto desde a origem até o consumidor final com informações detalhadas sobre produtor, propriedade e práticas utilizadas.
-                    </p>
-                </div>
-            </div>
-        </div>
         
-        <div class="col-lg-4">
-            <div class="feature-card h-100">
-                <div class="feature-icon">
-                    <i class="fa-solid fa-qrcode" style="font-size: 3rem; color: #34C759;"></i>
-                </div>
-                <div class="feature-content">
-                    <h4 class="feature-title">QR Code Instantâneo</h4>
-                    <p class="feature-description">
-                        Gere códigos QR automaticamente para cada lote, permitindo acesso rápido às informações de rastreabilidade via smartphone.
-                    </p>
-                </div>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Rastreável</div>
             </div>
-        </div>
-        
-        <div class="col-lg-4">
-            <div class="feature-card h-100">
-                <div class="feature-icon">
-                    <!-- Ícone corrigido: removi os caracteres inválidos de 'fa-leaf-ॉग' -->
-                    <i class="fa-solid fa-leaf" style="font-size: 3rem; color: #34C759;"></i>
-                </div>
-                <div class="feature-content">
-                    <h4 class="feature-title">Segurança Alimentar</h4>
-                    <p class="feature-description">
-                        Documente boas práticas agrícolas e garanta a qualidade dos alimentos, construindo confiança com seus consumidores.
-                    </p>
-                </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Disponível</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <div class="stat-number">QR</div>
+                <div class="stat-label">Instantâneo</div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="cta-section mt-5">
-    <div class="cta-card">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h3 class="cta-title">Pronto para começar?</h3>
-                <p class="cta-description mb-0">
-                    Registre seu primeiro lote agora e experimente a transparência total na cadeia produtiva.
-                </p>
+<!-- Adicionada a classe fade-in-section para animar a seção inteira -->
+<div class="features-modern fade-in-section" id="features">
+    <div class="section-header">
+        <span class="section-badge">Recursos</span>
+        <h2 class="section-title">Tudo que você precisa para rastrear</h2>
+        <p class="section-description">Ferramentas poderosas para garantir qualidade e transparência</p>
+    </div>
+    
+    <div class="features-grid">
+        <!-- Adicionada a classe fade-in-section para animar cada card individualmente -->
+        <div class="feature-card-modern fade-in-section">
+            <div class="feature-icon-wrapper green">
+                <i class="fa-solid fa-route"></i>
             </div>
-            <div class="col-lg-4 text-lg-end text-center mt-3 mt-lg-0">
-                <a href="{{ url_for('registrar_lote') }}" class="btn btn-success btn-lg">
-                    Começar Agora
-                </a>
+            <h3 class="feature-title-modern">Rastreabilidade Completa</h3>
+            <p class="feature-text-modern">
+                Acompanhe a jornada completa do produto desde o plantio até o consumidor final. 
+                Registro detalhado de todas as etapas do processo produtivo.
+            </p>
+            <div class="feature-link">
+                Saiba mais <i class="fa-solid fa-arrow-right ms-2"></i>
             </div>
         </div>
+        
+        <div class="feature-card-modern fade-in-section">
+            <div class="feature-icon-wrapper blue">
+                <i class="fa-solid fa-qrcode"></i>
+            </div>
+            <h3 class="feature-title-modern">QR Code Inteligente</h3>
+            <p class="feature-text-modern">
+                Geração automática de códigos QR únicos para cada lote. Acesso instantâneo 
+                a todas as informações via smartphone em segundos.
+            </p>
+            <div class="feature-link">
+                Saiba mais <i class="fa-solid fa-arrow-right ms-2"></i>
+            </div>
+        </div>
+        
+        <div class="feature-card-modern fade-in-section">
+            <div class="feature-icon-wrapper purple">
+                <!-- ================== -->
+                <!-- === MUDANÇA AQUI === -->
+                <!-- ================== -->
+                <i class="fa-solid fa-circle-question"></i>
+            </div>
+            <h3 class="feature-title-modern">Segurança Garantida</h3>
+            <p class="feature-text-modern">
+                Documentação completa das boas práticas agrícolas. Construa confiança 
+                e credibilidade com consumidores exigentes.
+            </p>
+            <div class="feature-link">
+                Saiba mais <i class="fa-solid fa-arrow-right ms-2"></i>
+            </div>
+        </div>
+        
+        <div class="feature-card-modern fade-in-section">
+            <div class="feature-icon-wrapper orange">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <h3 class="feature-title-modern">Relatórios Detalhados</h3>
+            <p class="feature-text-modern">
+                Análises completas e relatórios personalizados sobre sua produção. 
+                Dados precisos para tomada de decisões estratégicas.
+            </p>
+            <div class="feature-link">
+                Saiba mais <i class="fa-solid fa-arrow-right ms-2"></i>
+            </div>
+        </div>
+        
+        <div class="feature-card-modern fade-in-section">
+            <div class="feature-icon-wrapper teal">
+                <i class="fa-solid fa-leaf"></i>
+            </div>
+            <h3 class="feature-title-modern">Sustentabilidade</h3>
+            <p class="feature-text-modern">
+                Registre práticas sustentáveis e certificações ambientais. 
+                Valorize seu compromisso com o meio ambiente.
+            </p>
+            <div class="feature-link">
+                Saiba mais <i class="fa-solid fa-arrow-right ms-2"></i>
+            </div>
+        </div>
+        
+        <div class="feature-card-modern fade-in-section">
+            <div class="feature-icon-wrapper red">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <h3 class="feature-title-modern">Gestão Colaborativa</h3>
+            <p class="feature-text-modern">
+                Gerencie múltiplos usuários e propriedades em um único sistema. 
+                Controle de acesso e permissões personalizadas.
+            </p>
+            <div class="feature-link">
+                Saiba mais <i class="fa-solid fa-arrow-right ms-2"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Adicionada a classe fade-in-section para animar a seção -->
+<div class="cta-modern fade-in-section">
+    <div class="cta-content">
+        <h2 class="cta-title">Pronto para começar?</h2>
+        <p class="cta-description">
+            Registre seu primeiro lote e experimente a transparência total na cadeia produtiva.
+        </p>
+        <a href="{{ url_for('registrar_lote') }}" class="btn-cta-modern">
+            <span>Começar Agora</span>
+            <i class="fa-solid fa-arrow-right ms-2"></i>
+        </a>
     </div>
 </div>
 
 <style>
-    .hero-section {
-        padding: 4rem 0;
-        background: linear-gradient(135deg, rgba(52, 199, 89, 0.05) 0%, rgba(48, 209, 88, 0.05) 100%);
-        border-radius: 20px;
-        margin-bottom: 4rem;
+    :root {
+        --primary-green: #34C759;
+        --primary-green-light: #30D158;
+        --gradient-start: #34C759;
+        --gradient-end: #30D158;
+        --text-dark: #1a1a1a;
+        --text-gray: #6b7280;
+        --bg-light: #f9fafb;
+        --border-light: #e5e7eb;
+    }
+
+    /* Hero Section */
+    .modern-hero {
+        position: relative;
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 6rem;
+    }
+
+    .hero-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+    }
+
+    .gradient-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.3;
+        animation: float 20s ease-in-out infinite;
+    }
+
+    .orb-1 {
+        width: 500px;
+        height: 500px;
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        top: -10%;
+        right: -10%;
+        animation-delay: 0s;
+    }
+
+    .orb-2 {
+        width: 400px;
+        height: 400px;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        bottom: -10%;
+        left: -5%;
+        animation-delay: 7s;
+    }
+
+    .orb-3 {
+        width: 350px;
+        height: 350px;
+        background: linear-gradient(135deg, #f59e0b, #ef4444);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation-delay: 14s;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        25% { transform: translate(30px, -30px) scale(1.1); }
+        50% { transform: translate(-20px, 20px) scale(0.9); }
+        75% { transform: translate(20px, 30px) scale(1.05); }
+    }
+
+    .hero-content-wrapper {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        max-width: 900px;
+        padding: 2rem;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(52, 199, 89, 0.1);
+        color: var(--primary-green);
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(52, 199, 89, 0.2);
     }
 
     .hero-title {
-        color: var(--text-primary);
-        font-weight: 700;
-        line-height: 1.2;
+        font-size: 4rem;
+        font-weight: 800;
+        line-height: 1.25;
+        margin-bottom: 2rem;
+        color: var(--text-dark);
+        letter-spacing: -0.02em;
     }
 
-    .hero-subtitle {
-        font-size: 1.25rem;
-        line-height: 1.6;
+    .gradient-text {
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
-    .hero-actions .btn {
-        transition: var(--transition);
+    .hero-description {
+        font-size: 1.3rem;
+        color: var(--text-gray);
+        line-height: 1.8;
+        margin-bottom: 3rem;
+        max-width: 750px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
-    .hero-actions .btn:hover {
+    .hero-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary-modern {
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        color: white;
+        padding: 1rem 2.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 15px rgba(52, 199, 89, 0.3);
+    }
+
+    .btn-primary-modern:hover {
         transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(52, 199, 89, 0.4);
+        color: white;
     }
 
-    .features-section {
-        margin: 4rem 0;
+    .btn-secondary-modern {
+        background: white;
+        color: var(--text-dark);
+        padding: 1rem 2.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        border: 2px solid var(--border-light);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
     }
 
-    .feature-card {
-        background: var(--surface);
-        border: 1px solid var(--neutral-200);
-        border-radius: var(--border-radius-lg);
-        padding: 2.5rem;
+    .btn-secondary-modern:hover {
+        border-color: var(--primary-green);
+        color: var(--primary-green);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-stats {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-item {
         text-align: center;
-        transition: var(--transition);
-        box-shadow: var(--shadow-sm);
     }
 
-    .feature-card:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--primary-color);
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--primary-green);
+        margin-bottom: 0.25rem;
     }
 
-    .feature-icon {
-        margin-bottom: 1.5rem;
+    .stat-label {
+        font-size: 0.9rem;
+        color: var(--text-gray);
+        font-weight: 500;
     }
 
-    .feature-title {
+    .stat-divider {
+        width: 1px;
+        height: 40px;
+        background: var(--border-light);
+    }
+
+    /* Features Section */
+    .features-modern {
+        padding: 4rem 2rem;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .section-badge {
+        display: inline-block;
+        background: rgba(52, 199, 89, 0.1);
+        color: var(--primary-green);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
         font-weight: 600;
         margin-bottom: 1rem;
-        color: var(--text-primary);
     }
 
-    .feature-description {
-        color: var(--text-secondary);
-        line-height: 1.6;
-        margin: 0;
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
     }
 
-    .cta-section {
-        margin: 4rem 0 2rem 0;
+    .section-description {
+        font-size: 1.2rem;
+        color: var(--text-gray);
+        max-width: 600px;
+        margin: 0 auto;
     }
 
-    .cta-card {
-        background: linear-gradient(135deg, var(--surface) 0%, var(--surface-secondary) 100%);
-        border: 1px solid var(--neutral-200);
-        border-radius: var(--border-radius-lg);
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2.5rem;
+        padding: 0 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .feature-card-modern {
+        background: white;
+        border-radius: 24px;
         padding: 3rem;
-        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-light);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        min-height: 320px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .feature-card-modern::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .feature-card-modern:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        border-color: var(--primary-green);
+    }
+
+    .feature-card-modern:hover::before {
+        transform: scaleX(1);
+    }
+
+    .feature-icon-wrapper {
+        width: 70px;
+        height: 70px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        font-size: 1.8rem;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .feature-icon-wrapper.green { background: linear-gradient(135deg, #34C759, #30D158); }
+    .feature-icon-wrapper.blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .feature-icon-wrapper.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+    .feature-icon-wrapper.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .feature-icon-wrapper.teal { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+    .feature-icon-wrapper.red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+    .feature-title-modern {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+    }
+
+    .feature-text-modern {
+        color: var(--text-gray);
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+        flex-grow: 1;
+    }
+
+    .feature-link {
+        color: var(--primary-green);
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        margin-top: auto;
+    }
+
+    .feature-link:hover {
+        gap: 0.5rem;
+    }
+
+    /* CTA Section */
+    .cta-modern {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    .cta-content {
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        border-radius: 0;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: none;
+        width: 100%;
+    }
+
+    .cta-content::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+        animation: pulse 15s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1) rotate(0deg); }
+        50% { transform: scale(1.1) rotate(180deg); }
     }
 
     .cta-title {
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 0.5rem;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.75rem;
+        position: relative;
+        z-index: 2;
     }
 
     .cta-description {
-        color: var(--text-secondary);
-        font-size: 1.1rem;
+        font-size: 1.05rem;
+        color: rgba(255, 255, 255, 0.9);
+        max-width: 600px;
+        margin: 0 auto 1.75rem auto;
+        line-height: 1.6;
+        position: relative;
+        z-index: 2;
     }
 
+    .btn-cta-modern {
+        background: white;
+        color: var(--primary-green);
+        padding: 0.9rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 1rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        position: relative;
+        z-index: 2;
+    }
+
+    .btn-cta-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+        color: var(--primary-green);
+    }
+    
+    /* =============================== */
+    /* === NOVOS ESTILOS DE ANIMAÇÃO === */
+    /* =============================== */
+
+    /* Classe inicial para os elementos que serão animados */
+    .fade-in-section {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                    transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* Classe adicionada via JS para tornar o elemento visível */
+    .fade-in-section.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Atraso na transição para os cards para um efeito escalonado */
+    .feature-card-modern:nth-child(1) { transition-delay: 0.1s; }
+    .feature-card-modern:nth-child(2) { transition-delay: 0.2s; }
+    .feature-card-modern:nth-child(3) { transition-delay: 0.3s; }
+    .feature-card-modern:nth-child(4) { transition-delay: 0.4s; }
+    .feature-card-modern:nth-child(5) { transition-delay: 0.5s; }
+    .feature-card-modern:nth-child(6) { transition-delay: 0.6s; }
+
+    /* Responsive Design */
     @media (max-width: 768px) {
-        .hero-section {
-            padding: 3rem 1rem;
-        }
-        
         .hero-title {
             font-size: 2.5rem;
         }
-        
-        .hero-actions .btn {
-            display: block;
+
+        .hero-description {
+            font-size: 1.1rem;
+        }
+
+        .hero-actions {
+            flex-direction: column;
             width: 100%;
-            margin-bottom: 1rem;
         }
-        
-        .feature-card {
-            padding: 2rem;
-            margin-bottom: 1.5rem;
+
+        .btn-primary-modern,
+        .btn-secondary-modern {
+            width: 100%;
+            justify-content: center;
         }
-        
-        .cta-card {
-            padding: 2rem;
+
+        .hero-stats {
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .stat-divider {
+            width: 60px;
+            height: 1px;
+        }
+
+        .features-grid {
+            grid-template-columns: 1fr;
+            padding: 0 0rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+        }
+
+        .cta-content {
+            padding: 3rem 1.5rem;
+        }
+
+        .cta-title {
+            font-size: 1.8rem;
+        }
+
+        .cta-description {
+            font-size: 1rem;
         }
     }
 </style>
@@ -213,8 +673,39 @@
 <script>
     function scrollToFeatures() {
         document.getElementById('features').scrollIntoView({
-            behavior: 'smooth'
+            behavior: 'smooth',
+            block: 'start'
         });
     }
+
+    // =================================== //
+    // === NOVO SCRIPT PARA ANIMAÇÃO === //
+    // =================================== //
+    document.addEventListener('DOMContentLoaded', function() {
+        const sections = document.querySelectorAll('.fade-in-section');
+
+        // Configurações do Intersection Observer
+        const observerOptions = {
+            root: null, // Observa em relação ao viewport
+            rootMargin: '0px',
+            threshold: 0.1 // Ativa quando 10% do elemento estiver visível
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                // Se o elemento entrou na área de visualização
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    // Para de observar o elemento após a animação
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Aplica o observador a cada uma das seções
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    });
 </script>
 {% endblock %}

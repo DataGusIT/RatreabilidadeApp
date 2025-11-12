@@ -3,170 +3,264 @@
 {% block title %}Registrar Novo Lote{% endblock %}
 
 {% block content %}
-<div class="card shadow-lg border-0">
-    <div class="card-header text-center bg-transparent border-0 pt-4">
-        <div class="header-icon text-success mb-3">
-            <i class="fa-solid fa-clipboard-list fa-2x"></i>
+<div class="form-page-section">
+    <div class="container">
+        <!-- CABEÇALHO DA PÁGINA -->
+        <div class="page-header">
+            <h1 class="header-title">Registrar Novo Lote de Produto</h1>
+            <p class="header-subtitle">Preencha as informações para gerar o QR Code de rastreabilidade.</p>
         </div>
-        <h2 class="fw-bold">Registrar Novo Lote de Produto</h2>
-        <p class="mb-0 text-muted">Preencha as informações para gerar o QR Code de rastreabilidade.</p>
-    </div>
-    <div class="card-body p-4 p-md-5">
-        
-        <form method="POST" action="" class="needs-validation" novalidate>
-            <!-- ================== Seção Produtor ================== -->
-            <div class="form-section">
-                <div class="section-header">
-                    <span class="section-icon text-success"><i class="fa-solid fa-user-tie"></i></span>
-                    <h5 class="section-title">Informações do Produtor</h5>
-                </div>
-                <hr class="section-divider mb-4">
-                
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <label for="documento_produtor" class="form-label">CPF/CNPJ</label>
-                        <div class="input-group">
-                            <input type="text" id="documento_produtor" name="documento_produtor" class="form-control" 
-                                placeholder="Digite o CNPJ para buscar" required maxlength="18"
-                                value="{{ produtor.documento if produtor else '' }}">
-                            <span class="input-group-text d-none" id="cnpj-loader">
-                                <span class="spinner-border spinner-border-sm"></span>
-                            </span>
+
+        <!-- CARD PRINCIPAL DO FORMULÁRIO -->
+        <div class="form-main-card">
+            <form method="POST" action="" class="needs-validation" novalidate>
+                <!-- ================== Seção Produtor ================== -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-user-tie section-icon"></i>
+                        <h5 class="section-title">Informações do Produtor</h5>
+                    </div>
+                    <hr class="section-divider">
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="documento_produtor" class="form-label">CPF/CNPJ</label>
+                            <div class="input-group">
+                                <input type="text" id="documento_produtor" name="documento_produtor" class="form-control" 
+                                    placeholder="Digite o CNPJ para buscar" required maxlength="18"
+                                    value="{{ produtor.documento if produtor else '' }}">
+                                <span class="input-group-text d-none" id="cnpj-loader">
+                                    <span class="spinner-border spinner-border-sm"></span>
+                                </span>
+                            </div>
+                            <div class="invalid-feedback" id="documento-feedback">Por favor, informe um CPF ou CNPJ válido.</div>
+                            <div class="api-feedback" id="cnpj-api-feedback"></div>
                         </div>
-                        <div class="invalid-feedback" id="documento-feedback">Por favor, informe um CPF ou CNPJ válido.</div>
-                        <div class="api-feedback text-danger small mt-1" id="cnpj-api-feedback"></div>
-                    </div>
-                    <div class="col-md-6 mb-4">
-                        <label for="nome_produtor" class="form-label">Nome do Produtor / Razão Social</label>
-                        <input type="text" id="nome_produtor" name="nome_produtor" class="form-control" 
-                            placeholder="Preenchido automaticamente pelo CNPJ" required minlength="3"
-                            value="{{ produtor.nome if produtor else '' }}">
-                        <div class="invalid-feedback">O nome deve ter no mínimo 3 caracteres.</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================== Seção Propriedade ================== -->
-            <div class="form-section">
-                <div class="section-header">
-                    <span class="section-icon text-success"><i class="fa-solid fa-house-chimney"></i></span>
-                    <h5 class="section-title">Informações da Propriedade</h5>
-                </div>
-                <hr class="section-divider mb-4">
-
-                <div class="row">
-                    <div class="col-md-4 mb-4">
-                        <label for="cep" class="form-label">CEP</label>
-                        <div class="input-group">
-                            <input type="text" id="cep" name="cep" class="form-control" placeholder="Digite o CEP para buscar" maxlength="9">
-                            <span class="input-group-text d-none" id="cep-loader">
-                                <span class="spinner-border spinner-border-sm"></span>
-                            </span>
+                        <div class="col-md-6 mb-4">
+                            <label for="nome_produtor" class="form-label">Nome do Produtor / Razão Social</label>
+                            <input type="text" id="nome_produtor" name="nome_produtor" class="form-control" 
+                                placeholder="Preenchido automaticamente pelo CNPJ" required minlength="3"
+                                value="{{ produtor.nome if produtor else '' }}">
+                            <div class="invalid-feedback">O nome deve ter no mínimo 3 caracteres.</div>
                         </div>
-                        <div class="api-feedback text-danger small mt-1" id="cep-api-feedback"></div>
-                    </div>
-                    <div class="col-md-8 mb-4">
-                         <label for="nome_propriedade" class="form-label">Nome da Propriedade</label>
-                        <input type="text" id="nome_propriedade" name="nome_propriedade" class="form-control" 
-                               placeholder="Ex: Sítio Sol Nascente" required minlength="3">
-                        <div class="invalid-feedback">Informe um nome válido para a propriedade.</div>
                     </div>
                 </div>
-                
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <label for="endereco" class="form-label">Endereço</label>
-                        <input type="text" id="endereco" name="endereco" class="form-control" 
-                               placeholder="Preenchido automaticamente pelo CEP" required minlength="5">
-                        <div class="invalid-feedback">Informe um endereço com no mínimo 5 caracteres.</div>
-                    </div>
-                    <div class="col-md-6 mb-4">
-                        <label for="cidade" class="form-label">Cidade</label>
-                        <input type="text" id="cidade" name="cidade" class="form-control" 
-                               placeholder="Preenchido automaticamente pelo CEP" required minlength="3">
-                        <div class="invalid-feedback">Informe um nome de cidade válido.</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- ================== Seção Lote ================== -->
-            <div class="form-section">
-                <div class="section-header">
-                    <span class="section-icon text-success"><i class="fa-solid fa-box-archive"></i></span>
-                    <h5 class="section-title">Informações do Lote</h5>
-                </div>
-                <hr class="section-divider mb-4">
-                
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <label for="data_colheita" class="form-label">Data da Colheita</label>
-                        <input type="date" id="data_colheita" name="data_colheita" class="form-control" required>
-                        <div class="invalid-feedback" id="colheita-feedback">Informe a data da colheita. Não pode ser uma data futura.</div>
-                    </div>
-                    <div class="col-md-6 mb-4">
-                        <label for="validade" class="form-label">Data de Validade</label>
-                        <input type="date" id="validade" name="validade" class="form-control" required>
-                        <div class="invalid-feedback" id="validade-feedback">A data de validade deve ser posterior à data da colheita.</div>
-                    </div>
-                </div>
-                
-                <div class="mb-4">
-                    <label for="boas_praticas" class="form-label">Boas Práticas Utilizadas (Opcional)</label>
-                    <textarea id="boas_praticas" name="boas_praticas" rows="5" class="form-control" 
-                              placeholder="Descreva as práticas sustentáveis, métodos de cultivo, certificações, etc..."></textarea>
-                </div>
-            </div>
 
-            <!-- ================== Botão Submit ================== -->
-            <div class="submit-section mt-5">
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-success btn-lg submit-btn">
-                        <span class="btn-text">
-                            <i class="fa-solid fa-qrcode me-2"></i>
-                            Gerar QR Code e Salvar Lote
-                        </span>
-                        <span class="btn-loader d-none">
-                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-                            Processando...
-                        </span>
-                    </button>
+                <!-- ================== Seção Propriedade ================== -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-house-chimney section-icon"></i>
+                        <h5 class="section-title">Informações da Propriedade</h5>
+                    </div>
+                    <hr class="section-divider">
+
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <label for="cep" class="form-label">CEP</label>
+                            <div class="input-group">
+                                <input type="text" id="cep" name="cep" class="form-control" placeholder="Digite o CEP para buscar" maxlength="9">
+                                <span class="input-group-text d-none" id="cep-loader">
+                                    <span class="spinner-border spinner-border-sm"></span>
+                                </span>
+                            </div>
+                            <div class="api-feedback" id="cep-api-feedback"></div>
+                        </div>
+                        <div class="col-md-8 mb-4">
+                            <label for="nome_propriedade" class="form-label">Nome da Propriedade</label>
+                            <input type="text" id="nome_propriedade" name="nome_propriedade" class="form-control" 
+                                placeholder="Ex: Sítio Sol Nascente" required minlength="3">
+                            <div class="invalid-feedback">Informe um nome válido para a propriedade.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="endereco" class="form-label">Endereço</label>
+                            <input type="text" id="endereco" name="endereco" class="form-control" 
+                                placeholder="Preenchido automaticamente pelo CEP" required minlength="5">
+                            <div class="invalid-feedback">Informe um endereço com no mínimo 5 caracteres.</div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label for="cidade" class="form-label">Cidade</label>
+                            <input type="text" id="cidade" name="cidade" class="form-control" 
+                                placeholder="Preenchido automaticamente pelo CEP" required minlength="3">
+                            <div class="invalid-feedback">Informe um nome de cidade válido.</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </form>
+                
+                <!-- ================== Seção Lote ================== -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-box-archive section-icon"></i>
+                        <h5 class="section-title">Informações do Lote</h5>
+                    </div>
+                    <hr class="section-divider">
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="data_colheita" class="form-label">Data da Colheita</label>
+                            <input type="date" id="data_colheita" name="data_colheita" class="form-control" required>
+                            <div class="invalid-feedback" id="colheita-feedback">Informe a data da colheita. Não pode ser uma data futura.</div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label for="validade" class="form-label">Data de Validade</label>
+                            <input type="date" id="validade" name="validade" class="form-control" required>
+                            <div class="invalid-feedback" id="validade-feedback">A data de validade deve ser posterior à data da colheita.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="boas_praticas" class="form-label">Boas Práticas Utilizadas (Opcional)</label>
+                        <textarea id="boas_praticas" name="boas_praticas" rows="5" class="form-control" 
+                                placeholder="Descreva as práticas sustentáveis, métodos de cultivo, certificações, etc..."></textarea>
+                    </div>
+                </div>
+
+                <!-- ================== Botão Submit ================== -->
+                <div class="submit-section">
+                    <div class="d-grid">
+                        <button type="submit" class="btn-primary-modern submit-btn">
+                            <span class="btn-text">
+                                <i class="fa-solid fa-qrcode me-2"></i>
+                                Gerar QR Code e Salvar Lote
+                            </span>
+                            <span class="btn-loader d-none">
+                                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                Processando...
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <style>
-    /* Estilos originais mantidos e aprimorados */
+    :root {
+        --primary-green: #34C759;
+        --gradient-start: #34C759;
+        --gradient-end: #30D158;
+        --text-dark: #1a1a1a;
+        --text-gray: #6b7280;
+        --border-light: #e5e7eb;
+        --danger: #dc3545;
+        --success: #198754;
+    }
+
+    /* --- Layout Principal --- */
+    .form-page-section {
+        padding-top: 120px; /* Espaçamento para o navbar fixo */
+        padding-bottom: 4rem;
+    }
+
+    /* --- Cabeçalho --- */
+    .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    .header-title {
+        font-weight: 800;
+        font-size: 2.5rem;
+        color: var(--text-dark);
+    }
+    .header-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-gray);
+        max-width: 600px;
+        margin: 0.5rem auto 0 auto;
+    }
+
+    /* --- Card Principal --- */
+    .form-main-card {
+        background: #fff;
+        border: 1px solid var(--border-light);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        padding: 2rem 3rem;
+    }
+    @media (max-width: 768px) {
+        .form-main-card { padding: 1.5rem; }
+    }
+
+    /* --- Seções do Formulário --- */
     .form-section { margin-bottom: 2.5rem; }
-    .section-header { display: flex; align-items: center; gap: 0.75rem; }
-    .section-icon { font-size: 1.5rem; }
-    .section-title { margin: 0; font-weight: 600; }
+    .section-header { display: flex; align-items: center; gap: 0.75rem; color: var(--text-dark); }
+    .section-icon { font-size: 1.5rem; color: var(--primary-green); }
+    .section-title { margin: 0; font-weight: 600; font-size: 1.25rem; }
+    .section-divider { border-top: 1px solid var(--border-light); margin: 1rem 0 1.5rem 0; }
+    .form-label { font-weight: 500; margin-bottom: 0.5rem; }
+    
+    /* --- Estilo dos Campos --- */
     .form-control {
-        font-size: 1rem;
-        padding: 0.875rem 1rem;
-        border: 1px solid #ced4da;
-        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        border: 2px solid var(--border-light);
+        border-radius: 12px;
+        padding: 0.8rem 1rem;
+        transition: all 0.3s ease;
     }
     .form-control:focus {
-        border-color: #86b7fe;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, .25);
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 4px rgba(52, 199, 89, 0.15);
     }
-    .was-validated .form-control:valid, .form-control.is-valid { border-color: #198754; }
-    .was-validated .form-control:valid:focus, .form-control.is-valid:focus { box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, .25); }
-    .was-validated .form-control:invalid, .form-control.is-invalid { border-color: #dc3545; }
-    .was-validated .form-control:invalid:focus, .form-control.is-invalid:focus { box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, .25); }
-    .invalid-feedback { font-weight: 500; }
-    .submit-section { padding-top: 1.5rem; border-top: 1px solid #dee2e6; }
-    .submit-btn {
-        padding: 0.875rem;
-        font-size: 1.125rem;
+    .input-group .form-control {
+        border-right: 0; /* Para o loader não ter borda dupla */
+    }
+    .input-group .input-group-text {
+        border-radius: 0 12px 12px 0;
+        background-color: #fff;
+        border: 2px solid var(--border-light);
+        border-left: 0;
+    }
+
+    /* --- Validação --- */
+    .api-feedback {
+        font-size: 0.875em;
+        color: var(--danger);
+        margin-top: 0.25rem;
+    }
+    .was-validated .form-control:valid, .form-control.is-valid {
+        border-color: var(--success);
+    }
+    .was-validated .form-control:valid:focus, .form-control.is-valid:focus {
+        box-shadow: 0 0 0 4px rgba(25, 135, 84, .15);
+    }
+    .was-validated .form-control:invalid, .form-control.is-invalid {
+        border-color: var(--danger);
+    }
+    .was-validated .form-control:invalid:focus, .form-control.is-invalid:focus {
+        box-shadow: 0 0 0 4px rgba(220, 53, 69, .15);
+    }
+
+    /* --- Botão Moderno --- */
+    .submit-section {
+        padding-top: 1.5rem;
+        margin-top: 1rem;
+        border-top: 1px solid var(--border-light);
+    }
+    .btn-primary-modern {
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        color: white;
+        padding: 1rem 2.5rem;
+        border-radius: 12px;
         font-weight: 600;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        font-size: 1.1rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 15px rgba(52, 199, 89, 0.3);
     }
-    .submit-btn:hover {
+    .btn-primary-modern:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+        box-shadow: 0 8px 25px rgba(52, 199, 89, 0.4);
+        color: white;
+    }
+    .submit-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
     }
 </style>
 
@@ -298,7 +392,7 @@
 
     // --- VALIDAÇÃO GERAL E EM TEMPO REAL ---
     function performValidation(field) {
-        const feedbackEl = field.closest('.mb-4, .col-md-6').querySelector('.invalid-feedback');
+        const feedbackEl = field.closest('.mb-4, .col-md-6, .col-md-4, .col-md-8').querySelector('.invalid-feedback');
         let isValid = true;
         field.setCustomValidity(''); // Limpa validação customizada anterior
 
@@ -349,9 +443,14 @@
             event.preventDefault();
             event.stopPropagation();
         } else {
+            event.preventDefault(); // Impede o envio padrão para mostrar o loader
             btnText.classList.add('d-none');
             btnLoader.classList.remove('d-none');
             submitBtn.disabled = true;
+            // Simula um processamento e envia o formulário após um tempo
+            setTimeout(() => {
+                form.submit();
+            }, 1000); // 1 segundo de delay
         }
         form.classList.add('was-validated');
     });
@@ -359,10 +458,8 @@
     // Adiciona validação ao sair do campo (blur)
     form.querySelectorAll('input[required]').forEach(input => {
         input.addEventListener('blur', function() {
-            // Para ser validado no blur, o campo precisa estar "sujo" (dirty)
             if (this.value) { 
                 performValidation(this);
-                // Força a UI de validação do bootstrap
                 this.closest('form').classList.add('was-validated');
             }
         });

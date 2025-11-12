@@ -8,7 +8,8 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(256))
-    produtor = db.relationship('Produtor', backref='user', uselist=False, cascade="all, delete-orphan")
+    # produtor = db.relationship('Produtor', backref='user', uselist=False, cascade="all, delete-orphan")
+    lotes = db.relationship('Lote', backref='criador', lazy='dynamic')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -23,7 +24,7 @@ class Produtor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(150), nullable=False)
     documento = db.Column(db.String(20), unique=True, index=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) # Mude de True para False
+    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     propriedades = db.relationship('Propriedade', backref='produtor', lazy='dynamic', cascade="all, delete-orphan")
 
     def __repr__(self):
@@ -48,6 +49,7 @@ class Lote(db.Model):
     qr_code_path = db.Column(db.String(200))
     data_criacao = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     propriedade_id = db.Column(db.Integer, db.ForeignKey('propriedade.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
         return f'<Lote {self.id}>'

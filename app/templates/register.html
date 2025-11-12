@@ -3,131 +3,291 @@
 {% block title %}Registrar{% endblock %}
 
 {% block content %}
-<div class="register-container d-flex flex-column align-items-center justify-content-center">
-    <div class="register-card shadow-lg border-0 rounded-4">
-        <div class="card-body p-5">
+<div class="register-section">
+    <!-- Fundo de Orbs Animado -->
+    <div class="hero-background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <div class="register-card">
+        <div class="card-body">
             <div class="text-center mb-4">
-                <i class="fa-solid fa-user-plus display-3 text-success mb-3"></i> {# Ícone no topo do formulário #}
-                <h2 class="card-title fw-bold">Crie sua Conta de Produtor</h2>
-                <p class="text-muted">Junte-se a nós para rastrear seus produtos!</p>
+                <i class="fa-solid fa-user-plus display-3 mb-3" style="color: var(--primary-green);"></i>
+                <h2 class="card-title">Crie sua Conta de Produtor</h2>
+                <p class="card-description">Junte-se a nós para rastrear seus produtos!</p>
             </div>
             
             <form action="" method="post" novalidate>
                 {{ form.hidden_tag() }}
                 
                 <div class="mb-3">
-                    {{ form.username.label(class="form-label fw-semibold") }}
-                    <div class="input-group">
+                    {{ form.username.label(class="form-label") }}
+                    <div class="modern-input-group">
                         <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
-                        {{ form.username(class="form-control form-control-lg", placeholder="Seu nome de usuário", size=32) }}
+                        {{ form.username(class="form-control", placeholder="Seu nome de usuário", size=32) }}
                     </div>
                     {% for error in form.username.errors %}
-                    <div class="text-danger mt-1">[{{ error }}]</div>
+                    <div class="text-danger mt-1 small">[{{ error }}]</div>
                     {% endfor %}
                 </div>
 
                 <div class="mb-3">
-                    {{ form.email.label(class="form-label fw-semibold") }}
-                    <div class="input-group">
+                    {{ form.email.label(class="form-label") }}
+                    <div class="modern-input-group">
                         <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
-                        {{ form.email(class="form-control form-control-lg", placeholder="seuemail@exemplo.com", size=32) }}
+                        {{ form.email(class="form-control", placeholder="seuemail@exemplo.com", size=32) }}
                     </div>
                     {% for error in form.email.errors %}
-                    <div class="text-danger mt-1">[{{ error }}]</div>
+                    <div class="text-danger mt-1 small">[{{ error }}]</div>
                     {% endfor %}
                 </div>
                 
                 <div class="mb-3">
-                    {{ form.password.label(class="form-label fw-semibold") }}
-                    <div class="input-group">
+                    {{ form.password.label(class="form-label") }}
+                    <div class="modern-input-group">
                         <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
-                        {{ form.password(class="form-control form-control-lg", placeholder="Crie uma senha", size=32) }}
+                        {{ form.password(id="password-field-1", class="form-control", placeholder="Crie uma senha", size=32) }}
+                        <span class="password-toggle-icon" id="toggle-password-1">
+                            <i class="fa-solid fa-eye"></i>
+                        </span>
                     </div>
                     {% for error in form.password.errors %}
-                    <div class="text-danger mt-1">[{{ error }}]</div>
+                    <div class="text-danger mt-1 small">[{{ error }}]</div>
                     {% endfor %}
                 </div>
                 
                 <div class="mb-4">
-                    {{ form.password2.label(class="form-label fw-semibold") }}
-                    <div class="input-group">
+                    {{ form.password2.label(class="form-label") }}
+                    <div class="modern-input-group">
                         <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
-                        {{ form.password2(class="form-control form-control-lg", placeholder="Repita sua senha", size=32) }}
+                        {{ form.password2(id="password-field-2", class="form-control", placeholder="Repita sua senha", size=32) }}
+                        <span class="password-toggle-icon" id="toggle-password-2">
+                            <i class="fa-solid fa-eye"></i>
+                        </span>
                     </div>
                     {% for error in form.password2.errors %}
-                    <div class="text-danger mt-1">[{{ error }}]</div>
+                    <div class="text-danger mt-1 small">[{{ error }}]</div>
                     {% endfor %}
                 </div>
                 
                 <div class="d-grid gap-2">
-                    {{ form.submit(class="btn btn-success btn-lg fw-bold py-3") }}
+                    {{ form.submit(class="btn-primary-modern w-100") }}
                 </div>
             </form>
             
-            <p class="mt-4 text-center text-muted">
-                Já tem uma conta? <a href="{{ url_for('login') }}" class="text-success-emphasis fw-semibold text-decoration-none">Faça login!</a>
+            <p class="mt-4 text-center sub-text">
+                Já tem uma conta? <a href="{{ url_for('login') }}" class="link-emphasis">Faça login!</a>
             </p>
         </div>
     </div>
 </div>
 
 <style>
-    /* Estilos para o container de registro */
-    .register-container {
-        min-height: calc(100vh - 80px - 60px); /* Ajusta para a altura do header e footer */
-        padding-top: 2rem; /* Espaçamento superior */
-        padding-bottom: 2rem; /* Espaçamento inferior */
-        background-color: var(--background-secondary, #f8f9fa); /* Cor de fundo suave */
-        margin-top: 120px; /* Empurra o conteúdo abaixo do navbar fixo */
+    :root {
+        --primary-green: #34C759;
+        --primary-green-light: #30D158;
+        --gradient-start: #34C759;
+        --gradient-end: #30D158;
+        --text-dark: #1a1a1a;
+        --text-gray: #6b7280;
+        --bg-light: #f9fafb;
+        --border-light: #e5e7eb;
     }
 
-    /* Estilo do card de registro */
-    .register-card {
-        max-width: 450px;
+    /* Remove o container do main para permitir full width */
+    main.container-fluid {
+        margin-top: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Container principal da seção de registro */
+    .register-section {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
         width: 100%;
-        background-color: var(--surface, #ffffff);
-        border-radius: var(--border-radius-xl, 1rem); /* Borda mais arredondada */
-        box-shadow: var(--shadow-xl, 0 1rem 3rem rgba(0, 0, 0, 0.175)); /* Sombra mais pronunciada */
+        overflow: hidden;
+        padding: 120px 1rem 4rem 1rem; /* Padding para navbar e footer */
     }
 
-    /* Estilos para os inputs e grupos de input */
-    .input-group-text {
-        background-color: var(--neutral-100, #e9ecef);
-        border-right: none;
-        color: var(--text-secondary, #6c757d);
-        border-color: var(--neutral-300, #dee2e6);
+    /* Fundo animado */
+    .hero-background {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        z-index: 0;
+    }
+    .gradient-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(100px);
+        opacity: 0.3;
+        animation: float 20s ease-in-out infinite;
+    }
+    .orb-1 { width: 500px; height: 500px; background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); top: -10%; right: -10%; animation-delay: 0s; }
+    .orb-2 { width: 400px; height: 400px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); bottom: -10%; left: -5%; animation-delay: 7s; }
+    .orb-3 { width: 350px; height: 350px; background: linear-gradient(135deg, #f59e0b, #ef4444); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: 14s; }
+
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        25% { transform: translate(30px, -30px) scale(1.1); }
+        50% { transform: translate(-20px, 20px) scale(0.9); }
+        75% { transform: translate(20px, 30px) scale(1.05); }
     }
 
-    .form-control-lg {
-        border-left: none;
-        border-color: var(--neutral-300, #dee2e6);
+    /* Estilo do card de registro (glassmorphism) */
+    .register-card {
+        position: relative;
+        z-index: 2;
+        max-width: 480px; /* Um pouco mais largo para acomodar os campos */
+        width: 100%;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    .register-card .card-body {
+        padding: 2.5rem 3rem;
     }
 
-    .form-control-lg:focus {
-        border-color: var(--primary-color-dark, #28a745);
-        box-shadow: 0 0 0 0.25rem rgba(52, 199, 89, 0.25);
+    /* Tipografia do card */
+    .register-card .card-title {
+        font-weight: 700;
+        font-size: 1.8rem;
+        color: var(--text-dark);
+    }
+    .register-card .card-description {
+        color: var(--text-gray);
+        font-size: 1rem;
+    }
+    .register-card .form-label {
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: var(--text-dark);
+    }
+    .register-card .sub-text {
+        font-size: 0.95rem;
+        color: var(--text-gray);
+    }
+    .register-card .link-emphasis {
+        color: var(--primary-green);
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+    .register-card .link-emphasis:hover {
+        color: var(--text-dark);
     }
 
-    /* Cores dos textos e links */
-    .text-success-emphasis {
-        color: #30D158 !important; /* Cor mais vibrante para links */
+    /* Estilo moderno para os campos de input */
+    .modern-input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: #fff;
+        border: 2px solid var(--border-light);
+        border-radius: 12px;
+        transition: all 0.3s ease;
     }
-    .text-success-emphasis:hover {
-        color: #28a745 !important; /* Escurece um pouco no hover */
+    .modern-input-group .input-group-text {
+        background: transparent;
+        border: none;
+        padding: 0 0 0 1rem;
+        color: var(--text-gray);
+    }
+    .modern-input-group .form-control {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        padding: 0.8rem 1rem;
+    }
+    .modern-input-group input[type="password"] {
+        padding-right: 3rem; /* Espaço para o ícone */
+    }
+    .modern-input-group:focus-within {
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 4px rgba(52, 199, 89, 0.15);
+    }
+
+    /* Estilo do ícone de olho */
+    .password-toggle-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: var(--text-gray);
+        transition: color 0.2s ease;
+    }
+    .password-toggle-icon:hover {
+        color: var(--text-dark);
+    }
+
+    /* Estilo do botão */
+    .btn-primary-modern {
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        color: white;
+        padding: 1rem 2.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 15px rgba(52, 199, 89, 0.3);
+    }
+    .btn-primary-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(52, 199, 89, 0.4);
+        color: white;
     }
     
-    .btn-success {
-        background-color: #34C759;
-        border-color: #34C759;
-    }
-    .btn-success:hover {
-        background-color: #30D158;
-        border-color: #30D158;
-    }
-
-    /* Icone no topo do formulário */
-    .register-card .display-3 {
-        font-size: 4rem; /* Tamanho maior para o ícone */
+    @media (max-width: 576px) {
+        .register-card .card-body {
+            padding: 2rem;
+        }
+        .register-section {
+            padding-top: 100px;
+        }
     }
 </style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Função reutilizável para configurar o toggle de senha
+        function setupPasswordToggle(toggleId, fieldId) {
+            const toggleIcon = document.getElementById(toggleId);
+            const passwordField = document.getElementById(fieldId);
+
+            if (toggleIcon && passwordField) {
+                toggleIcon.addEventListener('click', function() {
+                    // Alterna o tipo do campo de senha (password/text)
+                    const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordField.setAttribute('type', type);
+
+                    // Alterna o ícone (olho/olho com traço)
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('fa-eye');
+                    icon.classList.toggle('fa-eye-slash');
+                });
+            }
+        }
+
+        // Configura para o primeiro campo de senha
+        setupPasswordToggle('toggle-password-1', 'password-field-1');
+
+        // Configura para o segundo campo de senha
+        setupPasswordToggle('toggle-password-2', 'password-field-2');
+    });
+</script>
 {% endblock %}
