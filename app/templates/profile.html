@@ -30,7 +30,7 @@
                     <div class="lote-item-card">
                         <!-- QR Code -->
                         <div class="lote-qr-code">
-                            <img src="{{ url_for('static', filename='qrcodes/' + lote.qr_code_path) }}" alt="QR Code" class="qr-code-img">
+                            <img src="{{ url_for('static', filename='qrcodes/' ~ (lote.qr_code_path or 'default.png')) }}" alt="QR Code" class="qr-code-img">
                         </div>
                         
                         <!-- INFORMAÇÕES DO LOTE -->
@@ -57,7 +57,7 @@
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{lote.id}}">
                                         <li>
-                                            <a class="dropdown-item" href="{{ url_for('static', filename='qrcodes/' + lote.qr_code_path) }}" download="qrcode_lote_{{lote.id}}.png">
+                                            <a class="dropdown-item" href="{{ url_for('static', filename='qrcodes/' ~ (lote.qr_code_path or 'default.png')) }}" download="qrcode_lote_{{lote.id}}.png">
                                                 <i class="fa-solid fa-download me-2"></i>Baixar QR Code
                                             </a>
                                         </li>

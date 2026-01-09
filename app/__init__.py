@@ -7,7 +7,7 @@ from flask_login import LoginManager
 from markupsafe import Markup
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../static') 
 
 @app.template_filter('nl2br')
 def nl2br(s):

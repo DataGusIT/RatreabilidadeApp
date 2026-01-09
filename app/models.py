@@ -8,7 +8,12 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(256))
-    # produtor = db.relationship('Produtor', backref='user', uselist=False, cascade="all, delete-orphan")
+    
+    # RELAÇÃO: Um usuário tem UM perfil de produtor
+    # uselist=False transforma o que seria uma lista em um objeto único (1-to-1)
+    produtor = db.relationship('Produtor', backref='user', uselist=False, cascade="all, delete-orphan")
+    
+    # Lotes criados por este usuário (auditoria)
     lotes = db.relationship('Lote', backref='criador', lazy='dynamic')
 
     def set_password(self, password):
@@ -17,14 +22,14 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def __repr__(self):
-        return f'<User {self.username}>'
-
 class Produtor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(150), nullable=False)
     documento = db.Column(db.String(20), unique=True, index=True)
-    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    # FK para o Usuário
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, unique=True)
+    
     propriedades = db.relationship('Propriedade', backref='produtor', lazy='dynamic', cascade="all, delete-orphan")
 
     def __repr__(self):

@@ -24,10 +24,10 @@
                 <!-- Coluna do QR Code -->
                 <div class="col-lg-5 qr-code-column">
                     <div class="qr-display-container">
-                        <img src="{{ url_for('static', filename='qrcodes/' + lote.qr_code_path) }}"
-                             alt="QR Code do Lote {{ lote.id }}"
-                             class="qr-image"
-                             id="qrImage">
+                        <img src="{{ url_for('static', filename='qrcodes/' ~ (lote.qr_code_path or 'default.png')) }}"
+                            alt="QR Code do Lote {{ lote.id }}"
+                            class="qr-image"
+                            id="qrImage">
                         <div class="qr-actions mt-4">
                             <button class="btn btn-primary" onclick="downloadQR()">
                                 <i class="fa-solid fa-download me-2"></i>

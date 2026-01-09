@@ -8,6 +8,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 import qrcode
 import os
 from datetime import datetime
+from sqlalchemy.exc import IntegrityError 
 
 @app.route('/')
 def index():
@@ -52,79 +53,80 @@ def profile():
 @login_required
 def registrar_lote():
     if request.method == 'POST':
-        # ... (coleta dos dados do formulário continua a mesma)
         nome_produtor = request.form.get('nome_produtor')
         documento_produtor = request.form.get('documento_produtor')
         nome_propriedade = request.form.get('nome_propriedade')
-        cidade = request.form.get('cidade')
-        endereco = request.form.get('endereco')
-        data_colheita_str = request.form.get('data_colheita')
-        validade_str = request.form.get('validade')
-        boas_praticas = request.form.get('boas_praticas')
+        
+        # --- VERIFICAÇÃO DE SEGURANÇA E UNICIDADE ---
+        # Procura se esse documento já existe no banco
+        produtor_existente = Produtor.query.filter_by(documento=documento_produtor).first()
+        
+        if produtor_existente and produtor_existente.user_id != current_user.id:
+            # Se o documento existe e pertence a OUTRO usuário
+            flash(f'O CPF/CNPJ {documento_produtor} já está cadastrado por outro usuário. Verifique os dados.', 'danger')
+            return redirect(url_for('registrar_lote'))
+        
+        # 1. Gerenciar o perfil de Produtor do Usuário atual
+        try:
+            if not current_user.produtor:
+                produtor = Produtor(
+                    nome=nome_produtor, 
+                    documento=documento_produtor, 
+                    user_id=current_user.id
+                )
+                db.session.add(produtor)
+            else:
+                produtor = current_user.produtor
+                produtor.nome = nome_produtor
+                produtor.documento = documento_produtor
+            
+            db.session.commit()
+            
+        except IntegrityError:
+            db.session.rollback()
+            flash('Erro de duplicidade: Este documento já está em uso.', 'danger')
+            return redirect(url_for('registrar_lote'))
 
-        data_colheita = datetime.strptime(data_colheita_str, '%Y-%m-%d').date()
-        validade = datetime.strptime(validade_str, '%Y-%m-%d').date()
-        
-        # --- NOVA LÓGICA "ENCONTRE OU CRIE" ---
-
-        # 1. Procura por um produtor com o documento informado
-        produtor = Produtor.query.filter_by(documento=documento_produtor).first()
-        
-        if not produtor:
-            # Se não existir, CRIA um novo registro de produtor
-            produtor = Produtor(nome=nome_produtor, documento=documento_produtor)
-            db.session.add(produtor)
-        else:
-            # Se já existir, apenas garante que o nome está atualizado
-            produtor.nome = nome_produtor
-        
-        # O commit é feito fora para consolidar a criação ou atualização
-        db.session.commit()
-        
-        # 2. Faz o mesmo para a Propriedade, vinculada ao Produtor encontrado/criado
-        propriedade = Propriedade.query.filter_by(
-            nome_propriedade=nome_propriedade, 
-            produtor_id=produtor.id
-        ).first()
-
+        # 2. Gerenciar a Propriedade
+        propriedade = Propriedade.query.filter_by(nome_propriedade=nome_propriedade, produtor_id=produtor.id).first()
         if not propriedade:
             propriedade = Propriedade(
                 nome_propriedade=nome_propriedade,
-                cidade=cidade,
-                endereco=endereco,
+                cidade=request.form.get('cidade'),
+                endereco=request.form.get('endereco'),
                 produtor_id=produtor.id
             )
             db.session.add(propriedade)
-        
-        # Consolida a criação da propriedade se for o caso
-        db.session.commit()
+            db.session.commit()
 
-        # 3. Cria o novo lote, associando o ID do usuário logado
+        # 3. Criar o Lote
         novo_lote = Lote(
-            data_colheita=data_colheita,
-            validade=validade,
-            boas_praticas=boas_praticas,
+            data_colheita=datetime.strptime(request.form.get('data_colheita'), '%Y-%m-%d').date(),
+            validade=datetime.strptime(request.form.get('validade'), '%Y-%m-%d').date(),
+            boas_praticas=request.form.get('boas_praticas'),
             propriedade_id=propriedade.id,
-            user_id=current_user.id  # <-- Ponto chave da alteração!
+            user_id=current_user.id
         )
         db.session.add(novo_lote)
-        db.session.commit()
+        db.session.commit() # Salvamos para o banco gerar o ID
 
-        # ... (resto do código para gerar QR Code continua igual)
+        # --- LÓGICA DO QR CODE CORRIGIDA ---
         qr_code_url = url_for('ver_lote', lote_id=novo_lote.id, _external=True)
         qr_img = qrcode.make(qr_code_url)
         qr_code_filename = f'lote_{novo_lote.id}.png'
-        qr_code_path = os.path.join(app.root_path, 'static/qrcodes', qr_code_filename)
-        os.makedirs(os.path.dirname(qr_code_path), exist_ok=True)
-        qr_img.save(qr_code_path)
+        
+        # MUDANÇA AQUI: Usamos app.static_folder para apontar para a raiz/static
+        qr_code_folder = os.path.join(app.static_folder, 'qrcodes')
+        
+        os.makedirs(qr_code_folder, exist_ok=True)
+        qr_img.save(os.path.join(qr_code_folder, qr_code_filename))
+        
         novo_lote.qr_code_path = qr_code_filename
         db.session.commit()
 
         return redirect(url_for('registro_sucesso', lote_id=novo_lote.id))
-        
-    # Como não há mais 'produtor' direto no usuário, esta parte pode ser removida ou ajustada.
-    # Por enquanto, vamos remover para evitar erros.
-    return render_template('registro_lote.html', title='Registrar Lote', produtor=None)
+
+    return render_template('registro_lote.html', title='Registrar Lote', produtor=current_user.produtor)
 
 @app.route('/lote/<int:lote_id>/sucesso')
 @login_required
@@ -141,36 +143,26 @@ def ver_lote(lote_id):
                            lote=lote, 
                            hora_atual=hora_atual)
 
-# NOVA ROTA PARA EXCLUIR O LOTE
 @app.route('/lote/<int:lote_id>/delete', methods=['POST'])
 @login_required
 def delete_lote(lote_id):
-    # Busca o lote no banco de dados ou retorna erro 404 se não encontrar
     lote = Lote.query.get_or_404(lote_id)
 
-    # Verificação de segurança: garante que o lote pertence ao usuário logado
-    if lote.propriedade.produtor.user_id != current_user.id:
-        # Se não for o dono, aborta a operação com um erro de "Acesso Proibido"
+    if lote.user_id != current_user.id:
         abort(403)
 
-    # Tenta excluir o arquivo de imagem do QR Code
     if lote.qr_code_path:
         try:
-            qr_code_full_path = os.path.join(app.root_path, 'static/qrcodes', lote.qr_code_path)
+            # MUDANÇA AQUI: Usamos app.static_folder
+            qr_code_full_path = os.path.join(app.static_folder, 'qrcodes', lote.qr_code_path)
             if os.path.exists(qr_code_full_path):
                 os.remove(qr_code_full_path)
         except OSError as e:
-            # Em caso de erro na exclusão do arquivo, informa no console, mas continua
-            print(f"Erro ao deletar o arquivo do QR Code: {e}")
+            print(f"Erro ao deletar o arquivo: {e}")
 
-    # Exclui o lote do banco de dados
     db.session.delete(lote)
     db.session.commit()
-
-    # Envia uma mensagem de sucesso para o usuário
     flash('Lote excluído com sucesso!', 'success')
-    
-    # Redireciona de volta para a página de perfil
     return redirect(url_for('profile'))
 
 @app.route('/logout')
