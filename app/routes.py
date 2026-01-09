@@ -9,6 +9,7 @@ import qrcode
 import os
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError 
+from flask import jsonify 
 
 @app.route('/')
 def index():
@@ -171,3 +172,15 @@ def logout():
     # Adicione esta linha com a categoria 'logout_success'
     flash('Você saiu com segurança. Até logo!', 'logout_success') 
     return redirect(url_for('index'))
+
+@app.route('/check-username', methods=['POST'])
+def check_username():
+    data = request.get_json()
+    user = User.query.filter_by(username=data.get('username')).first()
+    return jsonify({'exists': user is not None})
+
+@app.route('/check-email', methods=['POST'])
+def check_email():
+    data = request.get_json()
+    user = User.query.filter_by(email=data.get('email')).first()
+    return jsonify({'exists': user is not None})

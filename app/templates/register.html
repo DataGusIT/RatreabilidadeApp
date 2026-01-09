@@ -24,51 +24,59 @@
                 
                 <div class="mb-3">
                     {{ form.username.label(class="form-label") }}
-                    <div class="modern-input-group">
+                    <div class="modern-input-group {% if form.username.errors %}is-invalid-group{% endif %}">
                         <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
-                        {{ form.username(class="form-control", placeholder="Seu nome de usuário", size=32) }}
+                        {{ form.username(class="form-control", placeholder="Seu nome de usuário") }}
                     </div>
                     {% for error in form.username.errors %}
-                    <div class="text-danger mt-1 small">[{{ error }}]</div>
+                        <div class="invalid-feedback-modern">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i> {{ error }}
+                        </div>
                     {% endfor %}
                 </div>
 
                 <div class="mb-3">
                     {{ form.email.label(class="form-label") }}
-                    <div class="modern-input-group">
+                    <div class="modern-input-group {% if form.email.errors %}is-invalid-group{% endif %}">
                         <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
-                        {{ form.email(class="form-control", placeholder="seuemail@exemplo.com", size=32) }}
+                        {{ form.email(class="form-control", placeholder="seuemail@exemplo.com") }}
                     </div>
                     {% for error in form.email.errors %}
-                    <div class="text-danger mt-1 small">[{{ error }}]</div>
+                        <div class="invalid-feedback-modern">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i> {{ error }}
+                        </div>
                     {% endfor %}
                 </div>
                 
                 <div class="mb-3">
                     {{ form.password.label(class="form-label") }}
-                    <div class="modern-input-group">
+                    <div class="modern-input-group {% if form.password.errors %}is-invalid-group{% endif %}">
                         <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
-                        {{ form.password(id="password-field-1", class="form-control", placeholder="Crie uma senha", size=32) }}
+                        {{ form.password(id="password-field-1", class="form-control", placeholder="Crie uma senha") }}
                         <span class="password-toggle-icon" id="toggle-password-1">
                             <i class="fa-solid fa-eye"></i>
                         </span>
                     </div>
                     {% for error in form.password.errors %}
-                    <div class="text-danger mt-1 small">[{{ error }}]</div>
+                    <div class="invalid-feedback-modern">
+                        <i class="fa-solid fa-circle-exclamation me-1"></i> {{ error }}
+                    </div>
                     {% endfor %}
                 </div>
-                
+
                 <div class="mb-4">
                     {{ form.password2.label(class="form-label") }}
-                    <div class="modern-input-group">
+                    <div class="modern-input-group {% if form.password2.errors %}is-invalid-group{% endif %}">
                         <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
-                        {{ form.password2(id="password-field-2", class="form-control", placeholder="Repita sua senha", size=32) }}
+                        {{ form.password2(id="password-field-2", class="form-control", placeholder="Repita sua senha") }}
                         <span class="password-toggle-icon" id="toggle-password-2">
                             <i class="fa-solid fa-eye"></i>
                         </span>
                     </div>
                     {% for error in form.password2.errors %}
-                    <div class="text-danger mt-1 small">[{{ error }}]</div>
+                    <div class="invalid-feedback-modern">
+                        <i class="fa-solid fa-circle-exclamation me-1"></i> {{ error }}
+                    </div>
                     {% endfor %}
                 </div>
                 
@@ -249,6 +257,56 @@
         box-shadow: 0 8px 25px rgba(52, 199, 89, 0.4);
         color: white;
     }
+
+    /* Estilo para o grupo de input quando há erro */
+    .modern-input-group.is-invalid-group {
+        border-color: #ff3b30; /* Vermelho padrão iOS/Apple */
+        background-color: rgba(255, 59, 48, 0.02);
+    }
+
+    .modern-input-group.is-invalid-group .input-group-text {
+        color: #ff3b30;
+    }
+
+    /* Mensagem de erro profissional */
+    .invalid-feedback-modern {
+        color: #ff3b30;
+        font-size: 0.82rem;
+        margin-top: 0.5rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        padding-left: 4px;
+        animation: shakeError 0.4s cubic-bezier(.36,.07,.19,.97) both, fadeIn 0.3s ease;
+    }
+
+    /* Animação de "balanço" suave ao aparecer o erro */
+    @keyframes shakeError {
+        10%, 90% { transform: translate3d(-1px, 0, 0); }
+        20%, 80% { transform: translate3d(2px, 0, 0); }
+        30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+        40%, 60% { transform: translate3d(3px, 0, 0); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cor do ícone de mostrar/esconder senha quando há erro */
+    .is-invalid-group .password-toggle-icon {
+        color: rgba(255, 59, 48, 0.6);
+    }
+
+    .is-invalid-group .password-toggle-icon:hover {
+        color: #ff3b30;
+    }
+
+    /* Garante que o input não tenha bordas vermelhas internas do navegador */
+    .is-invalid-group .form-control {
+        border: none !important;
+        box-shadow: none !important;
+    }
     
     @media (max-width: 576px) {
         .register-card .card-body {
@@ -263,31 +321,133 @@
 
 {% block scripts %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Função reutilizável para configurar o toggle de senha
-        function setupPasswordToggle(toggleId, fieldId) {
-            const toggleIcon = document.getElementById(toggleId);
-            const passwordField = document.getElementById(fieldId);
+document.addEventListener('DOMContentLoaded', function() {
+    const usernameInput = document.querySelector('input[name="username"]');
+    const emailInput = document.querySelector('input[name="email"]');
+    const passwordInput = document.getElementById('password-field-1');
+    const passwordConfirmInput = document.getElementById('password-field-2');
 
-            if (toggleIcon && passwordField) {
-                toggleIcon.addEventListener('click', function() {
-                    // Alterna o tipo do campo de senha (password/text)
-                    const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-                    passwordField.setAttribute('type', type);
-
-                    // Alterna o ícone (olho/olho com traço)
-                    const icon = this.querySelector('i');
-                    icon.classList.toggle('fa-eye');
-                    icon.classList.toggle('fa-eye-slash');
-                });
-            }
+    // Função utilitária para mostrar erro
+    function setFieldError(input, message) {
+        const group = input.closest('.modern-input-group');
+        let feedback = group.nextElementSibling;
+        
+        if (!feedback || !feedback.classList.contains('invalid-feedback-modern')) {
+            feedback = document.createElement('div');
+            feedback.className = 'invalid-feedback-modern';
+            group.parentNode.insertBefore(feedback, group.nextSibling);
         }
 
-        // Configura para o primeiro campo de senha
-        setupPasswordToggle('toggle-password-1', 'password-field-1');
+        if (message) {
+            group.classList.add('is-invalid-group');
+            feedback.innerHTML = `<i class="fa-solid fa-circle-exclamation me-1"></i> ${message}`;
+            feedback.style.display = 'flex';
+        } else {
+            group.classList.remove('is-invalid-group');
+            feedback.style.display = 'none';
+        }
+    }
 
-        // Configura para o segundo campo de senha
-        setupPasswordToggle('toggle-password-2', 'password-field-2');
+    // 1. Verificação Instantânea de Usuário (Servidor)
+    usernameInput.addEventListener('blur', async () => {
+        if (usernameInput.value.length < 3) return;
+        const response = await fetch('/check-username', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username: usernameInput.value})
+        });
+        const data = await response.json();
+        if (data.exists) setFieldError(usernameInput, 'Este usuário já está em uso.');
+        else setFieldError(usernameInput, null);
     });
+
+    // 2. Verificação Instantânea de Email (Servidor)
+    emailInput.addEventListener('blur', async () => {
+        if (!emailInput.value.includes('@')) return;
+        const response = await fetch('/check-email', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({email: emailInput.value})
+        });
+        const data = await response.json();
+        if (data.exists) setFieldError(emailInput, 'Este e-mail já está cadastrado.');
+        else setFieldError(emailInput, null);
+    });
+
+    // 3. Verificação de Força da Senha (Local)
+    passwordInput.addEventListener('input', () => {
+        const val = passwordInput.value;
+        if (val.length === 0) setFieldError(passwordInput, null);
+        else if (val.length < 8) setFieldError(passwordInput, 'A senha deve ter pelo menos 8 caracteres.');
+        else if (!/[A-Z]/.test(val) || !/[0-9]/.test(val)) setFieldError(passwordInput, 'Dica: Use letras maiúsculas e números.');
+        else setFieldError(passwordInput, null);
+    });
+
+    // 4. Verificação de Coincidência (Local)
+    passwordConfirmInput.addEventListener('input', () => {
+        if (passwordConfirmInput.value !== passwordInput.value) {
+            setFieldError(passwordConfirmInput, 'As senhas não coincidem.');
+        } else {
+            setFieldError(passwordConfirmInput, null);
+        }
+    });
+
+    // Logica do Toggle de Senha (olho)
+    function setupPasswordToggle(toggleId, fieldId) {
+        const toggleIcon = document.getElementById(toggleId);
+        const passwordField = document.getElementById(fieldId);
+        if (toggleIcon && passwordField) {
+            toggleIcon.addEventListener('click', function() {
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                const icon = this.querySelector('i');
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            });
+        }
+    }
+    setupPasswordToggle('toggle-password-1', 'password-field-1');
+    setupPasswordToggle('toggle-password-2', 'password-field-2');
+
+    // Função de validação de formato de e-mail (Regex)
+    function isValidEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    emailInput.addEventListener('input', function() {
+        const value = emailInput.value;
+
+        if (value.length === 0) {
+            setFieldError(emailInput, null); // Limpa erro se campo estiver vazio
+        } 
+        else if (!isValidEmail(value)) {
+            setFieldError(emailInput, 'Formato de e-mail inválido (ex: nome@email.com).');
+        } 
+        else {
+            // Se o formato estiver OK, podemos até verificar se já existe no banco
+            checkEmailExists(value); 
+        }
+    });
+
+    // Função para verificar no banco (separada para ficar organizado)
+    async function checkEmailExists(email) {
+        try {
+            const response = await fetch('/check-email', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({email: email})
+            });
+            const data = await response.json();
+            if (data.exists) {
+                setFieldError(emailInput, 'Este e-mail já está cadastrado por outro produtor.');
+            } else {
+                setFieldError(emailInput, null); // Tudo certo!
+            }
+        } catch (e) {
+            console.error("Erro ao validar e-mail:", e);
+        }
+    }
+});
 </script>
 {% endblock %}

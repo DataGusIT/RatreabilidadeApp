@@ -5,7 +5,10 @@ from app.models import User
 
 class RegistrationForm(FlaskForm):
     username = StringField('Nome de Usuário', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    email = StringField('Email', validators=[
+        DataRequired(message='O e-mail é obrigatório.'), 
+        Email(message='Insira um endereço de e-mail válido.')
+    ])
     password = PasswordField('Senha', validators=[DataRequired()])
     password2 = PasswordField(
         'Repita a Senha', validators=[DataRequired(), EqualTo('password')])
@@ -14,13 +17,24 @@ class RegistrationForm(FlaskForm):
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user is not None:
-            raise ValidationError('Por favor, use um nome de usuário diferente.')
+            # Removi o "Por favor," para ser mais direto e moderno
+            raise ValidationError('Este nome de usuário já está em uso')
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
-            raise ValidationError('Por favor, use um endereço de email diferente.')
-
+            raise ValidationError('Este endereço de email já está cadastrado')
+    
+    password = PasswordField('Senha', validators=[
+        DataRequired(message='A senha é obrigatória.')
+    ])
+    
+    password2 = PasswordField(
+        'Repita a Senha', validators=[
+            DataRequired(message='A confirmação de senha é obrigatória.'), 
+            EqualTo('password', message='As senhas não coincidem.') 
+        ])
+    
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Senha', validators=[DataRequired()])
